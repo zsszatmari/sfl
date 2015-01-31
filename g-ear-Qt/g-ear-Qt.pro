@@ -29,9 +29,7 @@ SOURCES += main.cpp\
     QmlModel/PlaylistCategoryModel.cpp \
     QmlModel/PlaylistModelItem.cpp \
     QmlModel/PlaylistCategoryModelItem.cpp \
-    BoostFileManager.cpp \
-    QmlModel/SongListContextMenuModel.cpp \
-    QmlModel/SongListContextMenuModelItem.cpp
+    BoostFileManager.cpp
 
 HEADERS  += App.h \
     QTPreferences.h \
@@ -50,9 +48,7 @@ HEADERS  += App.h \
     QmlModel/ListModelItem.h \
     QmlModel/PlaylistCategoryModel.h \
     QmlModel/PlaylistCategoryModelItem.h \
-    BoostFileManager.h \
-    QmlModel/SongListContextMenuModel.h \
-    QmlModel/SongListContextMenuModelItem.h
+    BoostFileManager.h
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../include/core

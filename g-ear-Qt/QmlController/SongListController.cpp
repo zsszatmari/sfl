@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QQuickItem>
 #include <iostream>
+#include <QUuid>
 
 #include "SongListController.h"
 
@@ -19,12 +20,6 @@ SongListController::SongListController(QQmlEngine *engine,
 
     _songListModel = std::make_shared<SongListModel>(nullptr);
     qmlEngine()->rootContext()->setContextProperty("songListModel", _songListModel.get());
-    _contextMenuModel = std::make_shared<SongListContextMenuModel>(nullptr);
-    _contextSubMenuModel = std::make_shared<SongListContextMenuModel>(nullptr);
-    qmlEngine()->rootContext()->setContextProperty("songListContextMenuModel",
-                                                   _contextMenuModel.get());
-    qmlEngine()->rootContext()->setContextProperty("songListContextSubMenuModel",
-                                                   _contextSubMenuModel.get());
 }
 
 void SongListController::resortSongList(const QString &identifier,
@@ -47,37 +42,66 @@ void SongListController::addSelectedSong(int rowIndex)
 
 void SongListController::popupContextMenu(const QString &fieldHint)
 {
-    // test
-    _contextMenuModel->clear();
-    _contextSubMenuModel->clear();
-
-    std::unique_ptr<SongListContextMenuModelItem> item(new SongListContextMenuModelItem);
-    item->setMenuId(10);
-    item->setMenuText("test1");
-    _contextMenuModel->appendRow(std::move(item));
-
-    std::unique_ptr<SongListContextMenuModelItem> item0(new SongListContextMenuModelItem);
-    item0->setMenuId(0);
-    item0->setMenuText("test0");
-    _contextSubMenuModel->appendRow(std::move(item0));
-
     QObject *menuItem = qmlWindow()->findChild<QObject *>("contextMenuObject");
+    for (auto it = _menuItems.begin(); it != _menuItems.end(); ++it)
+    {
+        QMetaObject::invokeMethod(menuItem, "removeMenu",
+                Q_ARG(QVariant, QVariant(*it)));
+    }
+    _menuItems.clear();
+    _allMenuItems.clear();
+
+    auto subMenuSongIntents = _songListModel->songArray()->songIntentSubMenus(_selectedSongs);
+
+    for (auto it = subMenuSongIntents.begin(); it != subMenuSongIntents.end(); ++it)
+    {
+        QString title = QString::fromStdString((*it).first);
+        auto subMenus = (*it).second;
+        QVariantMap map;
+        for (auto i = subMenus.begin(); i != subMenus.end(); ++i)
+        {
+            QString menuId = QUuid::createUuid().toString();
+            map.insert(menuId, QString::fromStdString((*i)->menuText()));
+            _allMenuItems.insert(menuId, (*i));
+        }
+
+        QString tempSubId = QUuid::createUuid().toString();
+        QMetaObject::invokeMethod(menuItem, "addSubMenu",
+                Q_ARG(QVariant, QVariant(tempSubId)),
+                Q_ARG(QVariant, QVariant(title)),
+                Q_ARG(QVariant, QVariant::fromValue(map)));
+        _menuItems.push_back(tempSubId);
+    }
+
+    auto songIntents = _songListModel->songArray()->songIntents(_selectedSongs,
+                                                     fieldHint.toStdString());
+
+    for (auto it = songIntents.begin(); it != songIntents.end(); ++it)
+    {
+        QString tempId = QUuid::createUuid().toString();
+        QMetaObject::invokeMethod(menuItem, "addNormalMenu",
+                Q_ARG(QVariant, QVariant(tempId)),
+                Q_ARG(QVariant, QVariant(QString::fromStdString((*it)->menuText()))));
+
+        _menuItems.push_back(tempId);
+        _allMenuItems.insert(tempId, (*it));
+    }
 
     QMetaObject::invokeMethod(menuItem, "popup");
-
-//    std::vector<std::shared_ptr<Gear::ISongIntent>> songIntents =
-//            _songListModel->songArray()->songIntents(_selectedSongs,
-//                                                     fieldHint.toStdString());
-
-//    std::vector<std::pair<std::string, std::vector<shared_ptr<Gear::ISongIntent>>>> subMenuSongIntents = _songListModel->songArray()->songIntentSubMenus(_selectedSongs);
-
-//    for (int i = 0; i < songIntents.size(); ++i)
-//    {
-//        std::shared_ptr<Gear::ISongIntent> st = songIntents.at(i);
-    //    }
 }
 
-void SongListController::conductMenuOrder(const int &menuId)
+void SongListController::conductMenuOrder(const QString &menuId, const bool &needConfirm)
 {
-    qDebug() << "Do nothing, not implemented yet";
+    auto activatedMenu = _allMenuItems[menuId];
+    if (activatedMenu->confirmationNeeded(_selectedSongs) && needConfirm)
+    {
+        auto confirmDialog = qmlWindow()->findChild<QObject *>("messageDialogObjectName");
+        confirmDialog->setProperty("text", QString::fromStdString(activatedMenu->confirmationText(_selectedSongs)));
+        confirmDialog->setProperty("menuId", menuId);
+        confirmDialog->setProperty("visible", true);
+    }
+    else
+    {
+        activatedMenu->apply(_selectedSongs);
+    }
 }

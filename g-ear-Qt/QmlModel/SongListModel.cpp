@@ -16,8 +16,6 @@ method SongListModel(QObject *parent) :
                                                                                       std::shared_ptr<Gear::IPlaylist>> &p){
         _playlist = p.second;
         if (_playlist) {
-            qDebug() << "selected playlist: " << _playlist->playlistId().c_str() << " "
-                     << _playlist->songArray()->predicateAsString().c_str();
             _songArray = _playlist->songArray();
             reloadTable();
         }
@@ -82,9 +80,10 @@ int method columnCount(const QModelIndex &parent) const
 
 QVariant method data(const QModelIndex &index, int role) const
 {
-    _songs.setVisibleRange(std::max(0,index.row()-40), 80);
     QString roleStr = roleNames().value(role);
     QVariant retVal;
+
+    return "test";
 
     switch (role)
     {
@@ -223,10 +222,9 @@ QVariant method data(const QModelIndex &index, int role) const
 
 int	method rowCount(const QModelIndex & parent) const
 {
-    // qDebug() << "row count: " << _songs.size();
     Q_UNUSED(parent);
     int count = _songs.size();
 
     qDebug() << "The row count from _songs are: " << count;
-    return count;
+    return 25;
 }

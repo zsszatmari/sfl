@@ -43,7 +43,7 @@ private:
     std::shared_ptr<Gear::IPlaylist> _playlist;
     std::shared_ptr<Gear::ISongArray> _songArray;
 
-    mutable Gear::SongView _songs;
+    Gear::SongView _songs;
 };
 
 #endif // SONGLISTMODEL_H

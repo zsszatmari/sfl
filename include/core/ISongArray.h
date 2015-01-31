@@ -88,7 +88,6 @@ namespace Gear
         virtual bool empty() const = 0;
         virtual std::map<int,std::string> mapping(const string &field, int slots) const = 0;
         virtual SortDescriptor sortDescriptor() const = 0;
-        virtual string predicateAsString() const = 0;
 
     private:
         ISongArray(const ISongArray &rhs); // delete

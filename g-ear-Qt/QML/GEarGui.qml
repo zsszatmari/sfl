@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.1
+import QtQuick.Dialogs 1.1
 
 ApplicationWindow {
     id: mainwindow
@@ -77,6 +78,19 @@ ApplicationWindow {
             onVisibleChanged: {
                 settingsbutton.updateSettingButtonState()
             }
+        }
+    }
+
+
+    MessageDialog {
+        id: messageDialog
+        objectName: "messageDialogObjectName"
+        property string menuId: ""
+        title: "Information"
+        visible: false
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            songListController.conductMenuOrder(menuId, false)
         }
     }
 }

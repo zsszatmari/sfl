@@ -78,30 +78,37 @@ Item {
             id: contextMenu
             objectName: "contextMenuObject"
 
-            Instantiator {
-                id: subInstantiator
-                model: songListContextSubMenuModel
-                Menu {
-                    id: subMenu
-                    title: model.menuText
+
+            function addSubMenu(menuId, title, anObject) {
+                var mySubMenu = contextMenu.addMenu(title)
+                mySubMenu.objectName = menuId
+                for (var key in anObject) {
+                    var subItem = mySubMenu.addItem(anObject[key])
+                    subItem.objectName = key
+                    subItem.myTriggered = function() {
+                        songListController.conductMenuOrder(subItem.objectName)
+                    }
+                    subItem.triggered.connect(subItem.myTriggered)
                 }
-                onObjectAdded: {
-                    console.log(object + " is added")
-                    object.addItem("subtest0")
-                    object.addItem("subtest1")
-                    contextMenu.insertItem(index, object)
-                }
-                onObjectRemoved: contextMenu.removeItem(object)
             }
 
-            Instantiator {
-                model: songListContextMenuModel
-                MenuItem {
-                    text: model.menuText
-                    onTriggered: songListController.conductMenuOrder(model.menuId)
+            function addNormalMenu(menuId, text) {
+                var myMenuItem = contextMenu.addItem(text)
+                myMenuItem.objectName = menuId
+                myMenuItem.myTriggered = function() {
+                    songListController.conductMenuOrder(myMenuItem.objectName)
                 }
-                onObjectAdded: contextMenu.insertItem(index, object)
-                onObjectRemoved: contextMenu.removeItem(object)
+                myMenuItem.triggered.connect(myMenuItem.myTriggered)
+            }
+
+            function removeMenu(menuId) {
+                for (var i = 0; i < contextMenu.items.length; ++i) {
+                    if (contextMenu.items[i].objectName === menuId.toString()) {
+                        var toBeRemoved = contextMenu.items[i]
+                        contextMenu.removeItem(toBeRemoved)
+                        break
+                    }
+                }
             }
         }
 

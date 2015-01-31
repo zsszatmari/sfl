@@ -4,7 +4,6 @@
 #include <QObject>
 #include "QmlController.h"
 #include "QmlModel/SongListModel.h"
-#include "QmlModel/SongListContextMenuModel.h"
 #include "SongEntry.h"
 
 class QQmlEngine;
@@ -26,13 +25,13 @@ public:
 
     Q_INVOKABLE void popupContextMenu(const QString &fieldHint);
 
-    Q_INVOKABLE void conductMenuOrder(const int &menuId);
+    Q_INVOKABLE void conductMenuOrder(const QString &menuid, const bool &needConfirm = true);
 
 private:
     std::vector<Gear::SongEntry> _selectedSongs;
     std::shared_ptr<SongListModel> _songListModel;
-    std::shared_ptr<SongListContextMenuModel> _contextMenuModel;
-    std::shared_ptr<SongListContextMenuModel> _contextSubMenuModel;
+    QVector<QString> _menuItems;
+    QMap<QString, std::shared_ptr<Gear::ISongIntent>> _allMenuItems;
 };
 
 #endif // SONGLISTCONTROLLER_H
