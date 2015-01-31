@@ -115,7 +115,9 @@ public:
 
     void clear()
     {
+        beginResetModel();
         _itemList.clear();
+        endResetModel();
     }
 
 protected:

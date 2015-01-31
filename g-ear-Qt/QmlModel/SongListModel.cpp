@@ -225,5 +225,8 @@ int	method rowCount(const QModelIndex & parent) const
 {
     // qDebug() << "row count: " << _songs.size();
     Q_UNUSED(parent);
-    return _songs.size();
+    int count = _songs.size();
+
+    qDebug() << "The row count from _songs are: " << count;
+    return count;
 }

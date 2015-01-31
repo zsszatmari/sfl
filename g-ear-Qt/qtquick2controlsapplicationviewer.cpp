@@ -103,12 +103,12 @@ void QtQuick2ControlsApplicationViewer::setMainQmlFile(const QString &file)
 
     d->window = qobject_cast<QQuickWindow *>(component.create());
 
-     if (!d->window)
+    if (!d->window)
         qFatal("Error: Your root item has to be a Window.");
 
     d->engine.setIncubationController(d->window->incubationController());
+    songListController->setWindow(d->window);
     settingPanelController->addSettingsTabs(d->window);
-   // playlistController->addPlaylist(d->window);
 }
 
 void QtQuick2ControlsApplicationViewer::addImportPath(const QString &path)

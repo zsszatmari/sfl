@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
+import QtQml 2.2
 
 Item {
     TableView {
@@ -64,9 +65,9 @@ Item {
                         }
                     }
                     songlistView.selection.forEach( function(rowIndex) {
-                            songListController.clearSelectedSongs()
-                            songListController.addSelectedSong(rowIndex)
-                        }
+                        songListController.clearSelectedSongs()
+                        songListController.addSelectedSong(rowIndex)
+                    }
                     )
                     songListController.popupContextMenu(songlistView.getColumn(styleData.column).role)
                 }
@@ -75,6 +76,33 @@ Item {
 
         Menu {
             id: contextMenu
+            objectName: "contextMenuObject"
+
+            Instantiator {
+                id: subInstantiator
+                model: songListContextSubMenuModel
+                Menu {
+                    id: subMenu
+                    title: model.menuText
+                }
+                onObjectAdded: {
+                    console.log(object + " is added")
+                    object.addItem("subtest0")
+                    object.addItem("subtest1")
+                    contextMenu.insertItem(index, object)
+                }
+                onObjectRemoved: contextMenu.removeItem(object)
+            }
+
+            Instantiator {
+                model: songListContextMenuModel
+                MenuItem {
+                    text: model.menuText
+                    onTriggered: songListController.conductMenuOrder(model.menuId)
+                }
+                onObjectAdded: contextMenu.insertItem(index, object)
+                onObjectRemoved: contextMenu.removeItem(object)
+            }
         }
 
         sortIndicatorVisible: true
