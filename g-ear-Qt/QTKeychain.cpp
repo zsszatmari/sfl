@@ -139,8 +139,10 @@ namespace Gear
         {
             std::cout << "Encryption error!" << std::endl;
         }
-    #endif
         return data;
+    #else
+        return password;
+    #endif
     }
 
     std::string EncryptTool::decryptPassword(std::string encryptedPassword)
@@ -180,6 +182,9 @@ namespace Gear
             std::string strRet = lpStrOut;
             delete[] lpStrOut;
 
+#ifdef DEBUG
+            //std::cout << "decrypted data: '" << strRet << "'" << std::endl;
+#endif
             return strRet;
         }
         else
@@ -188,7 +193,7 @@ namespace Gear
             return "";
         }
     #else
-        return "";
+        return encryptedPassword;
     #endif
     }
 
