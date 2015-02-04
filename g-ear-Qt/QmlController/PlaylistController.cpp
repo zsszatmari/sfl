@@ -12,9 +12,8 @@
 #include "ValidPtr.h"
 #include "QmlModel/PlaylistModel.h"
 
-PlaylistController::PlaylistController(QQmlEngine *engine,
-                                       QObject *parent)
-    : QmlController(engine, parent)
+PlaylistController::PlaylistController(QQmlEngine *engine)
+    : QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("playlistController", this);
 

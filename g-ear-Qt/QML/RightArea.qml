@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQml 2.2
+import QtQuick.Layouts 1.1
 
 Item {
     TableView {
@@ -44,9 +45,10 @@ Item {
 
         itemDelegate: Item {
             Text {
-                anchors.centerIn: parent
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
                 color: styleData.textColor
-                elide: styleData.elideMode
+                elide: Text.ElideRight
                 text: styleData.value
             }
 
@@ -114,80 +116,179 @@ Item {
 
         sortIndicatorVisible: true
 
+//        headerDelegate: Component {
+//            Text {
+//                anchors.verticalCenter: parent.verticalCenter
+//                width: parent.width
+//                color: "black"
+//                elide: Text.ElideRight
+//                text: styleData.value
+//            }
+//        }
+
         TableViewColumn {
+            objectName: "sourceTableViewColumn"
             role: "source"; title: "Source";
-            width: 90;
-            horizontalAlignment: Text.AlignHCenter;
+            width: 100
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 90) {
+                    width = 90
+                }
+            }
         }
         TableViewColumn {
             role: "position"; title: "#";
-            width: 14
-            horizontalAlignment: Text.AlignHCenter;
+            horizontalAlignment: Text.AlignLeft;
+            width: 30
+            onWidthChanged: {
+                if (width < 15) {
+                    width = 15
+                }
+            }
         }
         TableViewColumn {
             role: "artist"; title: "Artist";
-            width: 90
-            horizontalAlignment: Text.AlignHCenter;
+            width: 120
+            horizontalAlignment: Text.AlignLeft;
+            onWidthChanged: {
+                if (width < 90) {
+                    width = 90
+                }
+            }
         }
         TableViewColumn {
             role: "track"; title: "No";
-            width: 30
-            horizontalAlignment: Text.AlignHCenter;
+            width: 50
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 30) {
+                    width = 30
+                }
+            }
         }
         TableViewColumn {
             role: "title"; title: "Title";
             width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "durationMillis"; title: "Time";
-            width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            width: 120
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "album"; title: "Album";
             width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "genre"; title: "Genre";
-            width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            width: 100
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "year"; title: "Year";
-            width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            width: 100
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "rating"; title: "Rating";
-            width: 90
-            horizontalAlignment: Text.AlignHCenter;
+            width: 100
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 90) {
+                    width = 90
+                }
+            }
         }
         TableViewColumn {
             role: "playCount"; title: "Plays";
-            width: 75
-            horizontalAlignment: Text.AlignHCenter;
+            width: 80
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 75) {
+                    width = 75
+                }
+            }
         }
         TableViewColumn {
             role: "disc"; title: "Disc";
-            width: 60
-            horizontalAlignment: Text.AlignHCenter;
+            width: 70
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 60) {
+                    width = 60
+                }
+            }
         }
         TableViewColumn {
             role: "lastPlayed"; title: "Last Played";
-            width: 135
-            horizontalAlignment: Text.AlignHCenter;
+            width: 140
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 135) {
+                    width = 135
+                }
+            }
         }
         TableViewColumn {
             role: "creationDate"; title: "Added On";
-            width: 120
-            horizontalAlignment: Text.AlignHCenter;
+            width: 130
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 120) {
+                    width = 120
+                }
+            }
         }
         TableViewColumn {
             role: "albumArtist"; title: "Album Artist";
-            width: 180
-            horizontalAlignment: Text.AlignHCenter;
+            width: 200
+            horizontalAlignment: Text.AlignLeft;
+
+            onWidthChanged: {
+                if (width < 180) {
+                    width = 180
+                }
+            }
         }
 
         anchors.fill: parent

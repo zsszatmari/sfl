@@ -10,6 +10,18 @@ ApplicationWindow {
     width: 1000
     height: 600
 
+    onClosing: {
+        if (mainWindowController.runInBackgroundAlreadyAsked()) {
+            if (mainWindowController.runInBackground()) {
+                close.accepted = false
+                mainWindowController.hideMainWindowToSystemTray()
+            }
+        } else {
+            close.accepted = false
+            mainWindowController.showRunInBackgroundDialog()
+        }
+    }
+
     TopBar {
         id: topBar
         anchors.left: parent.left

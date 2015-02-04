@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <iostream>
 #include <QUuid>
+#include <QApplication>
 
 #include "SongListController.h"
 
@@ -12,9 +13,8 @@
 #include "IPlaylist.h"
 #include "ISongIntent.h"
 
-SongListController::SongListController(QQmlEngine *engine,
-                                       QObject *parent) :
-    QmlController(engine, parent)
+SongListController::SongListController(QQmlEngine *engine) :
+    QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("songListController", this);
 

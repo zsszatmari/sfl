@@ -13,8 +13,7 @@ class PlaylistController : public QmlController
 {
     Q_OBJECT
 public:
-    PlaylistController(QQmlEngine *engine,
-                       QObject *parent = 0);
+    PlaylistController(QQmlEngine *engine);
 
     Q_INVOKABLE void userSelectedPlaylist(const QString &category,
                                           const QString &id,

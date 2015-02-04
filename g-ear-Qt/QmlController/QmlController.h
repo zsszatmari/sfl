@@ -9,12 +9,15 @@ class QmlController : public QObject
 {
     Q_OBJECT
 public:
-    explicit QmlController(QQmlEngine *engine,
-                           QObject *parent = 0);
+    explicit QmlController(QQmlEngine *engine);
 
     inline void setWindow(QQuickWindow *window)
     {
         _qmlWindow = window;
+        if (_qmlWindow)
+        {
+            emit windowReady();
+        }
     }
 
 protected:
@@ -27,6 +30,9 @@ protected:
     {
         return _qmlWindow;
     }
+
+signals:
+    void windowReady();
 
 private:
     QQmlEngine *_qmlEngine = nullptr;

@@ -53,6 +53,7 @@ namespace Gear
     private:
         SessionManager(const shared_ptr<IApp> &app);
         
+        void reselectCurrentPlaylist();
         void onConnected();
         void onPlaylistChange();
         void onRefreshingChange(bool value);

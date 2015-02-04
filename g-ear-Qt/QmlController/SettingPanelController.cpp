@@ -14,9 +14,8 @@
 
 using namespace Gear;
 
-SettingPanelController::SettingPanelController(QQmlEngine *engine,
-                                               QObject *parent)
-    : QmlController(engine, parent)
+SettingPanelController::SettingPanelController(QQmlEngine *engine)
+    : QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("preferencesPanel", this);
 }

@@ -12,10 +12,13 @@ method SongListModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
     // assume that this object lives forever. otherwise this would be outdated.
-    _playlistConnection = Gear::IApp::instance()->selectedPlaylistConnector().connect([this](const std::pair<Gear::PlaylistCategory,
-                                                                                      std::shared_ptr<Gear::IPlaylist>> &p){
+    _playlistConnection = Gear::IApp::instance()->selectedPlaylistConnector()
+            .connect([this](const std::pair<Gear::PlaylistCategory,
+                            std::shared_ptr<Gear::IPlaylist>> &p)
+    {
         _playlist = p.second;
-        if (_playlist) {
+        if (_playlist)
+        {
             _songArray = _playlist->songArray();
             reloadTable();
         }
@@ -24,19 +27,24 @@ method SongListModel(QObject *parent) :
 
 void method reloadTable()
 {
-    if (_songArray) {
-        _songs = _songArray->songs([this](const SongView &view,SongView::Event event, size_t offset, size_t size){
-
+    if (_songArray)
+    {
+        this->beginResetModel();
+        _songs = _songArray->songs([this](const SongView &view,
+                                   SongView::Event event,
+                                   size_t offset, size_t size)
+        {
             qDebug() << "song list updated: " << view.size();
-            if (!(view == this->_songs)) {
-
+            if (!(view == this->_songs))
+            {
                 qDebug() << "song list not this";
                 return;
             }
-            this->endResetModel();
 
             //[self showCount:_visibleSongs.size()];
         });
+
+        this->endResetModel();
         //[self showCount:_visibleSongs.size()];
     }
 
@@ -45,7 +53,6 @@ void method reloadTable()
         deselectOnNextReload = NO;
     }
 */
-    this->endResetModel();
     //[self.albumViewController reload];
 }
 
@@ -82,8 +89,6 @@ QVariant method data(const QModelIndex &index, int role) const
 {
     QString roleStr = roleNames().value(role);
     QVariant retVal;
-
-    return "test";
 
     switch (role)
     {
@@ -217,6 +222,13 @@ QVariant method data(const QModelIndex &index, int role) const
         break;
     }
 
+    if (!retVal.isValid())
+    {
+        retVal = "";
+    }
+
+   // qDebug() << "Row " << index.row() << " and Column " << roleNames()[role] << " : " << retVal;
+
     return retVal;
 }
 
@@ -225,6 +237,6 @@ int	method rowCount(const QModelIndex & parent) const
     Q_UNUSED(parent);
     int count = _songs.size();
 
-    qDebug() << "The row count from _songs are: " << count;
-    return 25;
+  //  qDebug() << "The row count from _songs are: " << count;
+    return count;
 }

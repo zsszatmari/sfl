@@ -13,15 +13,13 @@
 #include "SerialExecutor.h"
 
 namespace Gear
-{
-    using std::map;
-    
+{    
     class SongManipulationSession : public PlaylistSession
     {
     public:
         SongManipulationSession(const shared_ptr<IApp> &app);
         
-        virtual void modifySongs(const vector<string> &ids, const map<string, string> &changedStrings, const map<string, uint64_t> &changedInts) = 0;
+        virtual void modifySongs(const vector<string> &ids, const std::map<string, string> &changedStrings, const std::map<string, uint64_t> &changedInts) = 0;
         // TODO: this is not really async yet in GooglePlaySession's implementation!
         virtual void addSongsToPlaylistAsync(const string &playlistId, const vector<shared_ptr<ISong>> &songs, const function<void(const vector<SongEntry> &)> &result) = 0;
         virtual void removePlaylist(const shared_ptr<IPlaylist> &playlist) = 0;

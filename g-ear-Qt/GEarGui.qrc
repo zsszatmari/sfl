@@ -16,5 +16,11 @@
         <file>Image/test.png</file>
         <file>Image/TabGrey.png</file>
         <file>Image/SwitchGroove.png</file>
+        <file>Image/Gear.ico</file>
+        <file>Image/Next.png</file>
+        <file>Image/Pause.png</file>
+        <file>Image/Play.png</file>
+        <file>Image/player_volume.png</file>
+        <file>Image/Pre.png</file>
     </qresource>
 </RCC>

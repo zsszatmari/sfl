@@ -48,7 +48,6 @@ namespace Gear
     class LocalSession;
     class IJavascriptEngine;
     class IPlaybackWorker;
-    class SessionManager;
     class SongEntry;
     class QueueSongArray;
     class LastFmController;
@@ -140,7 +139,7 @@ namespace Gear
         virtual shared_ptr<Bridge> bridge() const;
         
     protected:
-        void doSetSelectedPlaylist(const std::pair<PlaylistCategory,shared_ptr<IPlaylist>> &p);
+        void doSetSelectedPlaylist(const std::pair<PlaylistCategory,shared_ptr<IPlaylist>> &p, bool force = false);
 
         shared_ptr<AlbumArtStash> _albumArtStash;
         shared_ptr<IEqualizer> _equalizer;
@@ -157,6 +156,8 @@ namespace Gear
         std::vector<std::function<void()>> _terminateCallbacks;
         shared_ptr<Bridge> _bridge;
         virtual string imageCacheDirectory() const = 0;
+
+        friend class SessionManager;
     };
 }
 

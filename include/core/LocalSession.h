@@ -33,7 +33,7 @@ namespace Gear {
 		virtual void createUserPlaylist(const vector<shared_ptr<ISong>> &songs, const string &name);
 
 		virtual void removePlaylist(const shared_ptr<IPlaylist> &playlist);
-		virtual void modifySongs(const vector<string> &ids, const map<string, string> &changedStrings, const map<string, uint64_t> &changedInts);
+		virtual void modifySongs(const vector<string> &ids, const std::map<string, string> &changedStrings, const std::map<string, uint64_t> &changedInts);
 		virtual void deletePlaylistEntriesSync(const vector<string> &entryIds, const vector<string> &songIds, const string &playlistId) = 0;
 		virtual void changePlaylistOrderSync(const string &playlistId, const vector<SongEntry> &songs, const SongEntry &afterId, const SongEntry &before);
 		virtual void changePlaylistNameSync(const string &newName, const string &playlistId);
@@ -49,7 +49,7 @@ namespace Gear {
 		virtual shared_ptr<Gui::IPaintable> sessionIcon(const shared_ptr<IPlaylist> &song) const;
 
 		virtual shared_ptr<ModifiablePlaylist> createUserPlaylistSync(const vector<shared_ptr<ISong>> &songs, const string &name) = 0;
-		virtual void modifySongsSync(const vector<string> &ids, const map<string, string> &changedStrings, const map<string, uint64_t> &changedInts) = 0;
+		virtual void modifySongsSync(const vector<string> &ids, const std::map<string, string> &changedStrings, const std::map<string, uint64_t> &changedInts) = 0;
 	};
 
 } /* namespace Gear */

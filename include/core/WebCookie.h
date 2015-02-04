@@ -16,7 +16,6 @@
 
 namespace Gear
 {
-    using std::map;
     using std::string;
     using std::vector;
     
@@ -24,9 +23,9 @@ namespace Gear
     {
     public:
         WebCookie();
-        WebCookie(const map<string, string> &properties);
+        WebCookie(const std::map<string, string> &properties);
 		static vector<WebCookie> cookies(const string &str, const string &domain, const string &separator = ",");
-        const map<string, string> &properties() const;
+        const std::map<string, string> &properties() const;
         const string name() const;
         const string value() const;
         const string domain() const;
@@ -35,7 +34,7 @@ namespace Gear
     private:
         const string stringForKey(const string &key) const;
         
-        map<string, string> _properties;
+        std::map<string, string> _properties;
     };
 }
 

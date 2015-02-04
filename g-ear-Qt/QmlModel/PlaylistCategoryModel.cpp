@@ -12,7 +12,9 @@ PlaylistCategoryModel::PlaylistCategoryModel(QQmlEngine *engine, QObject *parent
 {
     Q_ASSERT(engine);
 
-    _categoryConnection = Gear::IApp::instance()->sessionManager()->playlistsChangeEvent().connect([=](){
+    _categoryConnection = Gear::IApp::instance()->sessionManager()->playlistsChangeEvent()
+            .connect([=]()
+    {
         this->beginResetModel();
         _playlistModels.clear();
         this->clear();
@@ -52,7 +54,6 @@ PlaylistCategoryModel::PlaylistCategoryModel(QQmlEngine *engine, QObject *parent
 
 PlaylistCategoryModel::~PlaylistCategoryModel()
 {
-    qDebug() << "playlistcategory destruct";
     clear();
 }
 

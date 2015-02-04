@@ -19,6 +19,8 @@
 #include "QmlModel/SongListModel.h"
 #include "QmlModel/PlaylistCategoryModel.h"
 #include "QmlController/SongListController.h"
+#include "QmlController/MainWindowController.h"
+#include "QmlController/PlaybackPanelController.h"
 
 class QtQuick2ApplicationViewerPrivate
 {
@@ -86,6 +88,8 @@ void QtQuick2ControlsApplicationViewer::setMainQmlFile(const QString &file)
     Q_UNUSED(playlistController);
     SongListController *songListController = new SongListController(&(d->engine));
     Q_UNUSED(songListController);
+    MainWindowController *mainWindowController = new MainWindowController(&(d->engine));
+    PlaybackPanelController *playbackPanelController = new PlaybackPanelController(&d->engine);
 
     QQmlComponent component(&d->engine);
 
@@ -108,6 +112,8 @@ void QtQuick2ControlsApplicationViewer::setMainQmlFile(const QString &file)
 
     d->engine.setIncubationController(d->window->incubationController());
     songListController->setWindow(d->window);
+    mainWindowController->setWindow(d->window);
+    playbackPanelController->setWindow(d->window);
     settingPanelController->addSettingsTabs(d->window);
 }
 

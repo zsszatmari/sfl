@@ -13,8 +13,7 @@ class SongListController : public QmlController
 {
     Q_OBJECT
 public:
-    explicit SongListController(QQmlEngine *engine,
-                                QObject *parent = 0);
+    explicit SongListController(QQmlEngine *engine);
 
     Q_INVOKABLE void resortSongList(const QString &identifier,
                                     const bool &isAscending);

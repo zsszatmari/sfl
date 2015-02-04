@@ -29,7 +29,10 @@ SOURCES += main.cpp\
     QmlModel/PlaylistCategoryModel.cpp \
     QmlModel/PlaylistModelItem.cpp \
     QmlModel/PlaylistCategoryModelItem.cpp \
-    BoostFileManager.cpp
+    BoostFileManager.cpp \
+    QmlController/MainWindowController.cpp \
+    Widget/SystemTrayIcon.cpp \
+    QmlController/PlaybackPanelController.cpp
 
 HEADERS  += App.h \
     QTPreferences.h \
@@ -48,7 +51,10 @@ HEADERS  += App.h \
     QmlModel/ListModelItem.h \
     QmlModel/PlaylistCategoryModel.h \
     QmlModel/PlaylistCategoryModelItem.h \
-    BoostFileManager.h
+    BoostFileManager.h \
+    QmlController/MainWindowController.h \
+    Widget/SystemTrayIcon.h \
+    QmlController/PlaybackPanelController.h
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../include/core
@@ -100,4 +106,6 @@ win32 {
         #QMAKE_CXXFLAGS += /Od /Ob0
         #DEFINES += _DEBUG
     }
+
+    RC_FILE = g-ear-Qt.rc
 }

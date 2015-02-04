@@ -18,6 +18,7 @@
 namespace Gear
 {
     using std::vector;
+    using std::string;
     using std::pair;
     
     class ISongIntent;
@@ -27,11 +28,11 @@ namespace Gear
     class Chain;
     template<class T>
     class ValidPtr;
+    class SortedSongArray;
     
     class ISongArray
     {
     public:
-        ISongArray();
         virtual ~ISongArray();
         virtual bool operator==(const ISongArray &rhs);
         
@@ -64,8 +65,6 @@ namespace Gear
         virtual const bool orderedArray() const;
 
         virtual void removeSongs(const vector<SongEntry> &songs) = 0;
-        // this is dangerous: lot of memory needed
-        //virtual void removeSongsOtherThan(const vector<SongEntry> &songs, bool forceRefilter = false) = 0;
         virtual bool moveSongs(const vector<SongEntry> &entries, const SongEntry &after, const SongEntry &before) = 0;
         virtual void setSortDescriptor(const SortDescriptor &rhs) = 0;
 
@@ -88,17 +87,26 @@ namespace Gear
         virtual bool empty() const = 0;
         virtual std::map<int,std::string> mapping(const string &field, int slots) const = 0;
         virtual SortDescriptor sortDescriptor() const = 0;
+        virtual string predicateAsString() const = 0;
+
+        // only to be called from main thread
+        virtual vector<std::string> all(const string &field) const = 0;
+
+        SortedSongArray &impl();
 
     private:
+        // only possible direct descendant is SortedSongArray, this is to ensure that impl() works 
+        ISongArray();
+
         ISongArray(const ISongArray &rhs); // delete
         ISongArray &operator=(const ISongArray &rhs); // delete
     
-        virtual vector<std::string> all(const string &field) const = 0;
         virtual SongEntry atSync(size_t index) const = 0;
 
         virtual uint32_t sizeSync() const = 0;
 
         friend class IPlaylist;
+        friend class SortedSongArray;
         friend class UnionSongArray;
         friend class QueueSongArray;
     };

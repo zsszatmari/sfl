@@ -8,8 +8,7 @@ class SettingPanelController : public QmlController
 {
     Q_OBJECT
 public:
-    SettingPanelController(QQmlEngine *engine,
-                           QObject *parent = nullptr);
+    SettingPanelController(QQmlEngine *engine);
 
     void addSettingsTabs(QQuickWindow *window);
 

@@ -4,6 +4,7 @@
 #include "qtwebwindow.h"
 
 using std::make_pair;
+using std::map;
 
 namespace Gear
 {
