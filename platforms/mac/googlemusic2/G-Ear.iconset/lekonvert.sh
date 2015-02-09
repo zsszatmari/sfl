@@ -1,9 +1,0 @@
-convert icon_512x512@2x.png -resize 512x512 icon_512x512.png
-convert icon_512x512@2x.png -resize 512x512 icon_256x256@2x.png
-convert icon_512x512@2x.png -resize 256x256 icon_256x256.png
-convert icon_512x512@2x.png -resize 256x256 icon_128x128@2x.png
-convert icon_512x512@2x.png -resize 128x128 icon_128x128.png
-convert icon_512x512@2x.png -resize 64x64 icon_32x32@2x.png
-convert icon_512x512@2x.png -resize 32x32 icon_32x32.png
-convert icon_512x512@2x.png -resize 32x32 icon_16x16@2x.png
-convert icon_512x512@2x.png -resize 16x16 icon_16x16.png
