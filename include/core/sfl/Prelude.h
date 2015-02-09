@@ -4,8 +4,8 @@
 #include <vector>
 #include <functional>
 #include <type_traits>
-#include "Maybe.h"
-
+#include "sfl/Maybe.h"
+#include "sfl/Vector.h"
 
 /**
   * General purpose functions. Note the terminology 'range' refers to a genericcontainer. Requirements vary,
@@ -169,7 +169,7 @@ namespace sfl
     }
 
     /**
-      * The intersperse function takes an element and a list and `intersperses' that element
+      * The intersperse function takes an element and a range and `intersperses' that element
       * between the elements of the list. For example, intersperse(',',"abcde") == "a,b,c,d,e" 
       */
     template<typename T, typename R>
@@ -199,6 +199,16 @@ namespace sfl
             copy(element.begin(), element.end(), back_inserter(ret));
         }
         return std::move(ret);
+    }
+
+    /**
+      * Maps function f over a list, then concatenates (flattens) the result. F is expected
+      * to have a return type of R::value_type.
+      */
+    template<typename F,typename R,typename A = typename R::value_type,typename B = typename std::result_of<F(A &&)>::type>
+    B bind(F &&f, const R &range)
+    {
+        return concat(map(f, range));
     }
 
     /** 
@@ -269,6 +279,76 @@ namespace sfl
                 ? R(r.begin() + n, r.end())
                 : R(r.end(),r.end());
     }
+
+    /*
+     * span, applied to a predicate p and a range xs, returns a tuple where first element is longest prefix 
+     * (possibly empty) of xs of elements that satisfy p and second element is the remainder of the list:
+     */
+    template<typename F,typename R>
+    std::pair<R,R> span(F &&p, const R &xs)
+    {
+        auto it = find_if(xs.begin(),xs.end(),[&p](const typename R::value_type &x){return !p(x);});
+        return std::make_pair(R(xs.begin(),it),R(it,xs.end()));
+    }
+
+    /**
+      * The group function takes a range and returns a vector of ranges such that the concatenation of the 
+      * result is equal to the argument. Moreover, each sublist in the result contains only equal (by f) elements. 
+      */
+    template<typename F,typename R>
+    std::vector<R> groupByR(F &&eq, const R &range)
+    {
+        if (length(range) == 0) {
+            return std::vector<R>();
+        } else {
+            auto x = head(range);
+            auto xs = tail(range);
+            auto yszs = span(std::bind(eq,x,std::placeholders::_1),xs);
+            return cons(cons(x,yszs.first),groupByR(eq,yszs.second));
+        }
+    }
+
+    /**
+      * group by the the default comparison operator
+      */
+    template<typename R,typename T = typename R::value_type>
+    std::vector<R> groupR(const R &range)
+    {
+        return groupByR([](const T &lhs, const T &rhs){return lhs == rhs;}, range);
+    }
+
+    /*
+     * Generates an arithmetic sequence, with max possibly included. 
+     */ 
+    inline std::vector<long> sequence(long min, long inc, long max)
+    {
+        std::vector<long> ret;
+        long value = min;
+        while (value <= max) {
+            ret.push_back(value);
+            value += inc;
+        }
+        return ret;
+    }
+
+    /* 
+     * zip takes two lists and returns a list of corresponding pairs. If one input list is short, 
+     * excess elements of the longer list are discarded.
+     */
+    template<typename R,typename S,typename Rv = typename R::value_type, typename Sv = typename S::value_type>
+    std::vector<std::pair<Rv,Sv>> zip(const R &r, const S &s)
+    {
+        std::vector<std::pair<Rv,Sv>> ret;
+        auto itR = r.begin();
+        auto itS = s.begin();
+        while (itR != r.end() && itS != s.end()) {
+            ret.push_back(std::make_pair(*itR,*itS));
+            ++itR;
+            ++itS;
+        }
+        return std::move(ret);
+    }
+
 }
 
 #endif

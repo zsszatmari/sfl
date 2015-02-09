@@ -6,6 +6,8 @@
 #include "stdplus.h"
 #include MEMORY_H
 #include "json.h"
+#include "Color.h"
+#include "Gradient.h"
 
 namespace Gui
 {
@@ -31,6 +33,8 @@ namespace Gui
 		std::string imageName() const;
 		Spacing margin();
 		const Json::Value & rules() const;
+		Color color() const;
+		Gradient gradient() const;
 
 	private:
 		Rules(const Json::Value &json);

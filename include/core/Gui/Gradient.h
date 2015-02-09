@@ -22,12 +22,16 @@ namespace Gui
     class core_export Gradient : public IPaintable
     {
     public:
+        Gradient();
         Gradient(const vector<pair<Color, float>> &colors);
         Gradient(const Color &from, const Color &to);
         const vector<pair<Color, float>> &colors() const;
         Color colorAt(float ratio) const;
         
         virtual void paint(const IPainter &painter) const;
+
+        explicit operator bool() const;
+        bool operator==(const Gradient &rhs) const;
         
     private:
         vector<pair<Color, float>> _colors;

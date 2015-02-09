@@ -9,6 +9,7 @@
 #ifndef __G_Ear_core__Color__
 #define __G_Ear_core__Color__
 
+#include <iostream>
 #include "IPaintable.h"
 #include "Environment.h"
 
@@ -28,7 +29,8 @@ namespace Gui
         float blue() const;
         float alpha() const;
         
-        operator bool() const;
+        bool operator==(const Color &rhs) const;
+        explicit operator bool() const;
         
         virtual void paint(const IPainter &painter) const;
         
@@ -38,6 +40,8 @@ namespace Gui
         float _blue;
         float _alpha;
     };
+
+    std::ostream &operator<<(std::ostream &stream, const Color &color);
 }
 
 #endif /* defined(__G_Ear_core__Color__) */
