@@ -1,3 +1,0 @@
-libav obsolete
-openssl 1.0.2 mingw32 (did not compile with mingw64, boost did not like libressl 2.1.3)
-ffmpeg 2.4.3
