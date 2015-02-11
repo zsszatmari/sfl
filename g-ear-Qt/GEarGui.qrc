@@ -12,6 +12,7 @@
         <file>QML/PlaylistDelegate.qml</file>
         <file>QML/PlaylistView.qml</file>
         <file>QML/GradientTemplate.qml</file>
+        <file>QML/ColorTemplate.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>Image/test.png</file>

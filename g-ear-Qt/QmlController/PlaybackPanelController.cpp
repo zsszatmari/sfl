@@ -43,8 +43,9 @@ void PlaybackPanelController::setPlaybackConnection()
 {
     QQuickItem *topBar = qmlWindow()->findChild<QQuickItem *>("topBarObjectName");
     auto paintable = Gear::IApp::instance()->themeManager()->style().get("general topbar").paintable();
-    Painter painter(topBar, qmlEngine());
+    Painter painter(topBar);
     painter.setFillParent(true);
+    painter.setZOrder(-1);
     paintable->paint(painter);
 
     _playingConnection = Gear::IApp::instance()->player()->playingConnector()

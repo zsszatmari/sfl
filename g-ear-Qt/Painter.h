@@ -13,13 +13,18 @@
 class Painter : public Gui::IPainter
 {
 public:
-    Painter(QQuickItem *parentItem, QQmlEngine *engine);
+    Painter(QQuickItem *parentItem);
     virtual ~Painter();
 
     virtual void paint(const Gui::Color &color) const;
     virtual void paint(const Gui::NamedImage &image) const;
     virtual void paint(const Gui::BitmapImage &image) const;
     virtual void paint(const Gui::Gradient &gradient) const;
+
+    inline void setZOrder(const int &z)
+    {
+        _zOrder = z;
+    }
 
     inline void setLeftTopX(const int &x)
     {
@@ -51,12 +56,18 @@ public:
         _borderLineWidth = width;
     }
 
+    inline void setObjectName(const QString &name)
+    {
+        _objectName = name;
+    }
+
     inline void setFillParent(const bool &fillParent)
     {
         _fillParent = fillParent;
     }
 
 private:
+    int _zOrder = 0;
     int _leftTopX = 0;
     int _leftTopY = 0;
     int _width = 0;
@@ -64,8 +75,8 @@ private:
     int _rectangleRadius = 0;
     int _borderLineWidth = 0;
     bool _fillParent = false;
+    QString _objectName = "";
     QQuickItem *_parent = nullptr;
-    QQmlEngine *_engine = nullptr;
 };
 
 #endif // PAINTER_HPP

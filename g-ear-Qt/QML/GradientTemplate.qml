@@ -2,7 +2,8 @@ import QtQuick 2.0
 
 Canvas {
     property var colorStops
-    anchors.fill: parent
+    property bool fillParent: false
+    anchors.fill: fillParent ? parent : undefined
 
     onPaint: {
         var ctx = getContext("2d")

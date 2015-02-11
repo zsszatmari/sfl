@@ -6,9 +6,8 @@
 #include <QUuid>
 #include "Painter.h"
 
-Painter::Painter(QQuickItem *parentItem, QQmlEngine *engine) : Gui::IPainter()
+Painter::Painter(QQuickItem *parentItem) : Gui::IPainter()
   , _parent(parentItem)
-  , _engine(engine)
 {
     Q_ASSERT(_parent);
 }
@@ -21,6 +20,36 @@ Painter::~Painter()
 void Painter::paint(const Gui::Color &color) const
 {
     qDebug() << "painting color";
+
+    QQmlEngine *engine = qmlEngine(_parent);
+    QQmlComponent component(engine);
+
+    component.loadUrl(QUrl("qrc:/qml/QML/ColorTemplate.qml"));
+    QQuickItem *rectangle = qobject_cast<QQuickItem *>(component.create());
+
+    int red = color.red() * 255;
+    int green = color.green() *255;
+    int blue = color.blue() * 255;
+    int alpha = color.alpha() * 255;
+    QColor bgColor(red, green, blue, alpha);
+
+    if (_fillParent)
+    {
+        rectangle->setProperty("fillParent", true);
+    }
+    else
+    {
+        rectangle->setProperty("fillParent", false);
+        rectangle->setProperty("x", _leftTopX);
+        rectangle->setProperty("y", _leftTopY);
+        rectangle->setProperty("width", _width);
+        rectangle->setProperty("height", _height);
+    }
+    rectangle->setProperty("radius", _rectangleRadius);
+
+    rectangle->setProperty("color", bgColor);
+    rectangle->setParentItem(_parent);
+    rectangle->setProperty("z", _zOrder);
 }
 
 #pragma message("TODO")
@@ -60,19 +89,19 @@ void Painter::paint(const Gui::Gradient &gradient) const
 
     if (_fillParent)
     {
-       // rectangle->setProperty("anchors.fill", )
+        rectangle->setProperty("fillParent", true);
     }
     else
     {
+        rectangle->setProperty("fillParent", false);
         rectangle->setProperty("x", _leftTopX);
         rectangle->setProperty("y", _leftTopY);
         rectangle->setProperty("width", _width);
         rectangle->setProperty("height", _height);
     }
-    //rectangle->setProperty("radius", _rectangleRadius);
 
     rectangle->setProperty("colorStops", colorMap);
     rectangle->setParentItem(_parent);
-    rectangle->setProperty("z", -1);
+    rectangle->setProperty("z", _zOrder);
 }
 
