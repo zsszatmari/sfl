@@ -18,9 +18,11 @@ SettingPanelController::SettingPanelController(QQmlEngine *engine)
     : QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("preferencesPanel", this);
+
+    connect(this, SIGNAL(windowReady()), this, SLOT(addSettingsTabs()));
 }
 
-void SettingPanelController::addSettingsTabs(QQuickWindow *window)
+void SettingPanelController::addSettingsTabs()
 {
     auto preferenceGroupVector =
             IApp::instance()->preferencesPanel()->preferenceGroups();
@@ -34,7 +36,7 @@ void SettingPanelController::addSettingsTabs(QQuickWindow *window)
         tabItem->setProperty("title", QString::fromStdString(group.title()));
 
         QQuickItem *stackItem =
-                window->findChild<QQuickItem *>("settingsTabStack");
+                qmlWindow()->findChild<QQuickItem *>("settingsTabStack");
         tabItem->setParentItem(stackItem);
 
         // Add switch if type is OnOff
@@ -54,7 +56,7 @@ void SettingPanelController::addSettingsTabs(QQuickWindow *window)
                                    QString::fromStdString(preference.title()));
                 switchItem->setParentItem(switchColumnItem);
                 QObject::connect(switchItem, SIGNAL(checkedChanged(bool)),
-                                 this, SLOT(connect(bool)));
+                                 this, SLOT(buildConnect(bool)));
 
                 switch (preference.valueOnOff())
                 {
@@ -75,7 +77,7 @@ void SettingPanelController::addSettingsTabs(QQuickWindow *window)
     }
 }
 
-void SettingPanelController::connect(bool isToConnect)
+void SettingPanelController::buildConnect(bool isToConnect)
 {
     QObject *senderObject = sender();
     QQuickItem *senderSwitchItem = qobject_cast<QQuickItem *>(senderObject);

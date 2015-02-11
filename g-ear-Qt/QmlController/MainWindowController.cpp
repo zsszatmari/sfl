@@ -1,9 +1,15 @@
 #include <QApplication>
 #include <QQmlContext>
 #include <QMessageBox>
+
+#include "SharedMemoryStatusThreadWorker.h"
+
+#ifdef _WIN32
 #include <QWinJumpList>
 #include <QWinJumpListItem>
 #include <QWinJumpListCategory>
+#endif
+
 #include <QDir>
 #include <QDebug>
 
@@ -15,26 +21,44 @@ MainWindowController::MainWindowController(QQmlEngine *engine)
     : QmlController(engine)
     , _systemTrayIcon(std::make_shared<SystemTrayIcon>(this))
 {
+#ifdef _WIN32
     QWinJumpListItem *quitTask = new QWinJumpListItem(QWinJumpListItem::Link);
     quitTask->setTitle(tr("Quit Gear"));
     quitTask->setFilePath(QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-    qDebug() << QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
     quitTask->setArguments(QStringList("--quit"));
 
     QWinJumpList jumplist;
     jumplist.tasks()->addItem(quitTask);
     jumplist.tasks()->setVisible(true);
+#endif
 
     connect(_systemTrayIcon->getIcon().get(),
             SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason)));
 
     qmlEngine()->rootContext()->setContextProperty("mainWindowController", this);
+
+
+    qDebug() << "Starting shared memory status thread";
+    SharedMemoryStatusThreadWorker *threadWorker = new SharedMemoryStatusThreadWorker();
+    threadWorker->moveToThread(&_sharedMemoryStatusThread);
+    connect(threadWorker, SIGNAL(jobDone()), qApp, SLOT(quit()));
+    connect(threadWorker, SIGNAL(bringToFrontSignal()),
+                     this, SLOT(bringMainWindowToFront()));
+    connect(this, SIGNAL(startWork()), threadWorker, SLOT(doWork()));
+    connect(&_sharedMemoryStatusThread, SIGNAL(finished()), threadWorker, SLOT(deleteLater()));
+    _sharedMemoryStatusThread.start();
+    emit startWork();
+
+    connect(&_sharedMemoryTimer, SIGNAL(timeout()), threadWorker, SLOT(doWork()));
+    _sharedMemoryTimer.start(10);
 }
 
 MainWindowController::~MainWindowController()
 {
-
+    _sharedMemoryTimer.stop();
+    _sharedMemoryStatusThread.quit();
+    _sharedMemoryStatusThread.wait();
 }
 
 void MainWindowController::hideMainWindowToSystemTray()
@@ -86,10 +110,19 @@ void MainWindowController::onSystemTrayIconActivated(QSystemTrayIcon::Activation
 {
     if (reason == QSystemTrayIcon::Trigger)
     {
-        _systemTrayIcon->getIcon()->hide();
-        qmlWindow()->setWindowState(Qt::WindowNoState);
-        qmlWindow()->setVisible(true);
-        qmlWindow()->raise();
+        bringMainWindowToFront();
     }
+}
+
+void MainWindowController::bringMainWindowToFront()
+{
+    _systemTrayIcon->getIcon()->hide();
+    qmlWindow()->setWindowState(Qt::WindowNoState);
+    qmlWindow()->setVisible(true);
+    qmlWindow()->raise();
+
+#ifdef _WIN32
+    SetForegroundWindow(HWND(qmlWindow()->winId()));
+#endif
 }
 

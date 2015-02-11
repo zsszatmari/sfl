@@ -9,6 +9,9 @@
 #ifndef QTQUICK2APPLICATIONVIEWER_H
 #define QTQUICK2APPLICATIONVIEWER_H
 
+#include <QQmlEngine>
+#include <QQuickWindow>
+
 #ifndef QT_NO_WIDGETS
 #include <QApplication>
 #else
@@ -34,7 +37,8 @@ public:
     void setMainQmlFile(const QString &file);
     void addImportPath(const QString &path);
     void show();
-    QWindow *window();
+    QQmlEngine *engine();
+    QQuickWindow *window();
 
 private:
     class QtQuick2ApplicationViewerPrivate *d;

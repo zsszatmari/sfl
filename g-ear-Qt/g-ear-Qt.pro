@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     QmlController/MainWindowController.cpp \
     Widget/SystemTrayIcon.cpp \
     QmlController/PlaybackPanelController.cpp \
-    Painter.cpp
+    Painter.cpp \
+    QmlController/QmlControllerManager.cpp
 
 HEADERS  += App.h \
     QTPreferences.h \
@@ -57,8 +58,9 @@ HEADERS  += App.h \
     QmlController/MainWindowController.h \
     Widget/SystemTrayIcon.h \
     QmlController/PlaybackPanelController.h \
-    SharedMemoryStatusThread.h \
-    Painter.h
+    Painter.h \
+    QmlController/QmlControllerManager.h \
+    SharedMemoryStatusThreadWorker.h
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../include/core

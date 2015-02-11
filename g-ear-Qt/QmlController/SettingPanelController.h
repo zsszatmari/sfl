@@ -10,12 +10,9 @@ class SettingPanelController : public QmlController
 public:
     SettingPanelController(QQmlEngine *engine);
 
-    void addSettingsTabs(QQuickWindow *window);
-
-signals:
-
 public slots:
-    void connect(bool isToConnect);
+    void addSettingsTabs();
+    void buildConnect(bool isToConnect);
 
 };
 

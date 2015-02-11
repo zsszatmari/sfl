@@ -81,16 +81,6 @@ QtQuick2ControlsApplicationViewer::~QtQuick2ControlsApplicationViewer()
 void QtQuick2ControlsApplicationViewer::setMainQmlFile(const QString &file)
 {
     //d->mainQmlFile = QtQuick2ApplicationViewerPrivate::adjustPath(file);
-
-    // TODO: this might not be the right place to create these, feel free to move elsewhere
-    SettingPanelController *settingPanelController = new SettingPanelController(&(d->engine));
-    PlaylistController *playlistController = new PlaylistController(&(d->engine));
-    Q_UNUSED(playlistController);
-    SongListController *songListController = new SongListController(&(d->engine));
-    Q_UNUSED(songListController);
-    MainWindowController *mainWindowController = new MainWindowController(&(d->engine));
-    PlaybackPanelController *playbackPanelController = new PlaybackPanelController(&d->engine);
-
     QQmlComponent component(&d->engine);
 
     QObject::connect(&d->engine, SIGNAL(quit()), QCoreApplication::instance(), SLOT(quit()));
@@ -111,10 +101,6 @@ void QtQuick2ControlsApplicationViewer::setMainQmlFile(const QString &file)
         qFatal("Error: Your root item has to be a Window.");
 
     d->engine.setIncubationController(d->window->incubationController());
-    songListController->setWindow(d->window);
-    mainWindowController->setWindow(d->window);
-    playbackPanelController->setWindow(d->window);
-    settingPanelController->addSettingsTabs(d->window);
 }
 
 void QtQuick2ControlsApplicationViewer::addImportPath(const QString &path)
@@ -128,7 +114,12 @@ void QtQuick2ControlsApplicationViewer::show()
         d->window->show();
 }
 
-QWindow * QtQuick2ControlsApplicationViewer::window()
+QQmlEngine *QtQuick2ControlsApplicationViewer::engine()
+{
+    return &(d->engine);
+}
+
+QQuickWindow *QtQuick2ControlsApplicationViewer::window()
 {
     return d->window;
 }

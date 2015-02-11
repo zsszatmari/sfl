@@ -1,15 +1,16 @@
-#include	<QApplication>
-#include	<QQuickView>
+#include <QApplication>
+#include <QQuickView>
 #include <QSystemSemaphore>
 #include <QSharedMemory>
-#include <QMessageBox>
 #include <iostream>
+#include <QThread>
+#include <QDebug>
 #include "qtquick2controlsapplicationviewer.h"
-#include	"IApp.h"
-#include	"App.h"
+#include "IApp.h"
+#include "App.h"
 #include "stdplus.h"
 
-#include "SharedMemoryStatusThread.h"
+#include "QmlController/QmlControllerManager.h"
 
 using namespace Gear;
 
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
     sema.acquire();
     QSharedMemory mem("GEAR_MUSIC_PLAYER_KEY_WIN");
     std::cout << "Creating shared memory" << std::endl;
-    if (!mem.create(1))
+    if (!mem.create(2))
     {
         std::cout << "Creating shared memory failed" << std::endl;
         if (argv[1] == QString("--quit"))
@@ -110,15 +111,22 @@ int main(int argc, char *argv[])
                 mem.unlock();
                 mem.detach();
             }
-            sema.release();
-            exit(0);
         }
         else
         {
-            QMessageBox::information(0, "Gear Music Player Error","An instance has already been running.");
-            sema.release();
-            exit(0);
+            if (mem.attach())
+            {
+                mem.lock();
+                void *dataArea = mem.data();
+                bool bringToFront = true;
+                std::memcpy(dataArea + 1, &bringToFront, 1);
+                mem.unlock();
+                mem.detach();
+            }
         }
+
+        sema.release();
+        exit(0);
     }
     std::cout << "Created shared memory" << std::endl;
 
@@ -126,28 +134,28 @@ int main(int argc, char *argv[])
     void *dataArea = mem.data();
     bool notQuitApp = false;
     std::memcpy(dataArea, &notQuitApp, 1);
+    bool notBringToFront = false;
+    std::memcpy(dataArea + 1, &notBringToFront, 1);
     mem.unlock();
     sema.release();
-
-    std::cout << "Starting shared memory status thread" << std::endl;
-    std::shared_ptr<SharedMemoryStatusThread> sharedMemoryStatusThread
-            = std::make_shared<SharedMemoryStatusThread>(nullptr);
-    QObject::connect(sharedMemoryStatusThread.get(), SIGNAL(finished()), qApp, SLOT(quit()));
-    sharedMemoryStatusThread->start();
 
     shared_ptr<IExecutor> executor(new QtExecutor());
     DefaultExecutor::registerInstance(executor);
     IApp::registerInstance(App::instance());
     App::instance()->appStarted();
 
-    // this does not work
-    //qmlRegisterType<QtPreferencesPanel>("Gear", 1, 0, "PreferencesPanel");
-
-
     QtQuick2ControlsApplicationViewer viewer;
+
+    QmlControllerManager controllerManager;
+    controllerManager.initializeController(viewer.engine());
     viewer.setMainQmlFile(QStringLiteral("qrc:/qml/QML/GEarGui.qml"));
-    //viewer.setMainQmlFile(QStringLiteral("qml/qttest/main.qml"));
+    controllerManager.setWindow(viewer.window());
+
     viewer.show();
 
-    return app.exec();
+    int exitStatus = app.exec();
+
+    qDebug() << "Returning exit status " << exitStatus;
+
+    return exitStatus;
 }
