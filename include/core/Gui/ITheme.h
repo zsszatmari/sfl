@@ -77,6 +77,9 @@ namespace Gui
         virtual shared_ptr<IPaintable> settingsIcon() = 0;
         
         virtual shared_ptr<IPaintable> listBackground() const = 0;
+        virtual Gui::Color artBackground() const;
+	    virtual Gui::Color overlayBackground() const;
+        
         virtual shared_ptr<IPaintable> listSeparator() const = 0;
         virtual float listSeparatorThickness() const = 0;
         
@@ -100,6 +103,8 @@ namespace Gui
         virtual Color gray() const = 0;
 
         const Style & style() const;
+
+		virtual Gui::Color selectedTextBackground() const;
         
     protected:
     	Style _style;

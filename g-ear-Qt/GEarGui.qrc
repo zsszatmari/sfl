@@ -13,6 +13,7 @@
         <file>QML/PlaylistView.qml</file>
         <file>QML/GradientTemplate.qml</file>
         <file>QML/ColorTemplate.qml</file>
+        <file>QML/CustomizeSystemMenu.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>Image/test.png</file>
@@ -28,5 +29,9 @@
         <file>Image/RepeatPlaylist.png</file>
         <file>Image/Shuffle.png</file>
         <file>Image/NoRepeat.png</file>
+        <file>Image/Close.png</file>
+        <file>Image/Maximize.png</file>
+        <file>Image/Minimize.png</file>
+        <file>Image/ShowNormal.png</file>
     </qresource>
 </RCC>

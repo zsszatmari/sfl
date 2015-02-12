@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
@@ -6,6 +6,14 @@ import QtQuick.Controls.Styles 1.3
 Item {
     objectName: "topBarObjectName"
     height: 62
+
+    CustomizeSystemMenu {
+        width: 60; height: 20
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        anchors.right: parent.right
+        anchors.rightMargin: 2
+    }
 
     Item {
         id: controlPanel

@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT += core gui qml quick declarative webkitwidgets network
-QT += winextras
 #otherwise printf goes to /dev/null on windows. oh, wait...
 #CONFIG  += console
 
@@ -32,7 +31,7 @@ SOURCES += main.cpp\
     QmlModel/PlaylistCategoryModelItem.cpp \
     BoostFileManager.cpp \
     QmlController/MainWindowController.cpp \
-    Widget/SystemTrayIcon.cpp \
+    WinFeature/SystemTrayIcon.cpp \
     QmlController/PlaybackPanelController.cpp \
     Painter.cpp \
     QmlController/QmlControllerManager.cpp
@@ -56,7 +55,7 @@ HEADERS  += App.h \
     QmlModel/PlaylistCategoryModelItem.h \
     BoostFileManager.h \
     QmlController/MainWindowController.h \
-    Widget/SystemTrayIcon.h \
+    WinFeature/SystemTrayIcon.h \
     QmlController/PlaybackPanelController.h \
     Painter.h \
     QmlController/QmlControllerManager.h \
@@ -90,6 +89,7 @@ macx {
 }
 
 win32 {
+    QT += winextras
 
     mingw {
         LIBS += ..\lib\win\libcore.a

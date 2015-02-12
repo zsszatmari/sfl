@@ -12,7 +12,7 @@
 #include <vector>
 #include "Environment.h"
 
-#define OPTION_DISABLE_INAPP
+//#define OPTION_DISABLE_INAPP
 
 namespace Gear
 {
