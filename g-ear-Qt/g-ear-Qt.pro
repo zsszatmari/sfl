@@ -17,7 +17,6 @@ SOURCES += main.cpp\
     App.cpp \
     QTPreferences.cpp \
     QTKeychain.cpp \
-    PlaybackWorker.cpp \
     qtquick2controlsapplicationviewer.cpp \
     qtwebwindow.cpp \
     QmlController/PlaylistController.cpp \
@@ -33,13 +32,14 @@ SOURCES += main.cpp\
     QmlController/MainWindowController.cpp \
     WinFeature/SystemTrayIcon.cpp \
     QmlController/PlaybackPanelController.cpp \
-    Painter.cpp \
-    QmlController/QmlControllerManager.cpp
+    Theme/Painter.cpp \
+    QmlController/QmlControllerManager.cpp \
+    QmlController/StatusBarController.cpp \
+    Theme/IconProvider.cpp
 
 HEADERS  += App.h \
     QTPreferences.h \
     QTKeychain.h \
-    PlaybackWorker.h \
     qtquick2controlsapplicationviewer.h \
     qtwebwindow.h \
     QmlController/PlaylistController.h \
@@ -57,9 +57,11 @@ HEADERS  += App.h \
     QmlController/MainWindowController.h \
     WinFeature/SystemTrayIcon.h \
     QmlController/PlaybackPanelController.h \
-    Painter.h \
+    Theme/Painter.h \
     QmlController/QmlControllerManager.h \
-    SharedMemoryStatusThreadWorker.h
+    SharedMemoryStatusThreadWorker.h \
+    QmlController/StatusBarController.h \
+    Theme/IconProvider.h
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../include/core
@@ -89,6 +91,9 @@ macx {
 }
 
 win32 {
+    SOURCES += PlaybackWorkerDX.cpp
+    HEADERS += PlaybackWorkerDX.h
+
     QT += winextras
 
     mingw {
@@ -100,13 +105,15 @@ win32 {
     LIBS += ..\lib\win\Crypt32.Lib
     LIBS += ..\lib\win\avcodec-56.dll ..\lib\win\avfilter-5.dll ..\lib\win\avformat-56.dll ..\lib\win\avresample-2.dll ..\lib\win\avutil-54.dll
     LIBS += ..\lib\win\libmpg123-0.dll
+    LIBS += -ldsound -ldxguid -lwinmm
+
     #LIBS += ..\lib\win\libssl-30.dll ..\lib\win\libcrypto-30.dll
     LIBS += ..\lib\win\ssleay32.dll ..\lib\win\libeay32.dll
     LIBS += -lws2_32 -lwsock32 -lmswsock
     LIBS += -lgdi32
 
     DESTDIR = ..\out
-    QMAKE_POST_LINK = copy ..\lib\win\*.dll $${DESTDIR}
+    QMAKE_POST_LINK = copy ..\lib\win\*.dll $${DESTDIR} && xcopy ..\lib\assets $${DESTDIR}\assets\ /E /y
 
     debug {
         #QMAKE_CXXFLAGS += /Od /Ob0

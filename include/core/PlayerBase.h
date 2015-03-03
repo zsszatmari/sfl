@@ -77,7 +77,6 @@ namespace Gear
         bool songValid(const SongEntry &entry) const;
         void clearSong();
         
-        Base::SerialExecutor _playExecutor;
         THREAD_NS::mutex _playInterruptMutex;
         shared_ptr<Interruptor::Handle> _playInterruptHandle;
 

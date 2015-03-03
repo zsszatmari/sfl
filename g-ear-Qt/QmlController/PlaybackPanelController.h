@@ -1,5 +1,5 @@
-#ifndef PLAYBACKPANELCONTROLLER_HPP
-#define PLAYBACKPANELCONTROLLER_HPP
+#ifndef PLAYBACKPANELCONTROLLER_H
+#define PLAYBACKPANELCONTROLLER_H
 
 #include "QmlController.h"
 
@@ -31,4 +31,4 @@ private:
     Base::SignalConnection _SongInfoConnection;
 };
 
-#endif // PLAYBACKPANELCONTROLLER_HPP
+#endif // PLAYBACKPANELCONTROLLER_H

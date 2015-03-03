@@ -33,6 +33,9 @@ extern std::vector<std::pair<std::string,std::function<void()>>> tests;
 #define ASSERT_TRUE(x) \
 	if (!(x)) { throw std::logic_error("assertion '" #x "' not true"); }
 
+#define ASSERT_FALSE(x) \
+	if ((x)) { throw std::logic_error("assertion '" #x "' not false"); }
+
 #define ASSERT_EQ(x,y) \
 	{\
 		auto evalx = x;\

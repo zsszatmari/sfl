@@ -33,7 +33,7 @@ namespace Gear
     {
     public:
         PlaylistCategory();
-        PlaylistCategory(const string &title, int tag, bool defaultSelection = false);
+        PlaylistCategory(const string &title, int tag, bool defaultSelection = false, const vector<shared_ptr<IPlaylist>> &playlists = vector<shared_ptr<IPlaylist>>());
         
         string title() const;
         explicit operator bool() const;
@@ -62,7 +62,7 @@ namespace Gear
         operator Json::Value() const;
         static Json::Value serialize(const vector<PlaylistCategory> &);
         static vector<PlaylistCategory> deserialize(const Json::Value &array);
-        
+
     private:
         string _title;
         bool _defaultSelection;

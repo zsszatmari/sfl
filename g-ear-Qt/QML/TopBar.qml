@@ -28,9 +28,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            width: preButtonMouseArea.containsMouse ? 32 : 30
-            height: preButtonMouseArea.containsMouse ? 32 : 30
-            source: "qrc:/images/Image/Pre.png"
+            source: preButtonMouseArea.containsMouse ? "image://themeIconProvider/PrePushed" : "image://themeIconProvider/PreNormal"
 
             MouseArea {
                 id: preButtonMouseArea
@@ -48,9 +46,13 @@ Item {
             property bool isPlaying: true
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            width: playPauseButtonMouseArea.containsMouse ? 32 : 30
-            height: playPauseButtonMouseArea.containsMouse ? 32 : 30
-            source: isPlaying ? "qrc:/images/Image/Pause.png" : "qrc:/images/Image/Play.png"
+            source: {
+                if (isPlaying) {
+                    return playPauseButtonMouseArea.containsMouse ? "image://themeIconProvider/PausePushed" : "image://themeIconProvider/PauseNormal"
+                } else {
+                    return playPauseButtonMouseArea.containsMouse ? "image://themeIconProvider/PlayPushed" : "image://themeIconProvider/PlayNormal"
+                }
+            }
 
             MouseArea {
                 id: playPauseButtonMouseArea
@@ -67,9 +69,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 10
-            width: nextButtonMouseArea.containsMouse ? 32 : 30
-            height: nextButtonMouseArea.containsMouse ? 32 : 30
-            source: "qrc:/images/Image/Next.png"
+            source: nextButtonMouseArea.containsMouse ? "image://themeIconProvider/NextPushed" : "image://themeIconProvider/NextNormal"
 
             MouseArea {
                 id: nextButtonMouseArea

@@ -9,7 +9,7 @@
 #include "Gui/Rules.h"
 #include "Gui/IPaintable.h"
 #include "sfl/just_ptr.h"
-#include "Painter.h"
+#include "Theme/Painter.h"
 
 PlaybackPanelController::PlaybackPanelController(QQmlEngine *engine)
     : QmlController(engine)
@@ -59,25 +59,25 @@ void PlaybackPanelController::setPlaybackConnection()
     _shuffleConnection = Gear::IApp::instance()->player()->shuffle().connector()
             .connect([this](const bool isShuffle)
     {
-        QObject *repeatModeArea = qmlWindow()->findChild<QObject *>("playModeAreaObjectName");
-        repeatModeArea->setProperty("isShuffle", isShuffle);
+        QObject *shuffleIconObject = qmlWindow()->findChild<QObject *>("shuffleIconObject");
+        shuffleIconObject->setProperty("shuffleActive", isShuffle);
         qDebug() << "Now the shuffle status: " << isShuffle;
     });
 
     _repeatConnection = Gear::IApp::instance()->player()->repeat().connector()
             .connect([this](const Gear::IPlayer::Repeat repeatMode)
     {
-        QObject *repeatModeArea = qmlWindow()->findChild<QObject *>("playModeAreaObjectName");
+        QObject *repeatIconObject = qmlWindow()->findChild<QObject *>("repeatIconObject");
         switch (repeatMode)
         {
         case Gear::IPlayer::Repeat::Off:
-            repeatModeArea->setProperty("selectedRepeatModeIndex", 0);
+            repeatIconObject->setProperty("repeatActive", false);
             break;
         case Gear::IPlayer::Repeat::On:
-            repeatModeArea->setProperty("selectedRepeatModeIndex", 1);
+            repeatIconObject->setProperty("repeatActive", true);
             break;
         case Gear::IPlayer::Repeat::OneSong:
-            repeatModeArea->setProperty("selectedRepeatModeIndex", 2);
+            repeatIconObject->setProperty("repeatActive", true);
             break;
         }
         qDebug() << "Now the repeat mode: " << (int)repeatMode;

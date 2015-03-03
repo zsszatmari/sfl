@@ -67,7 +67,7 @@ namespace Gear
         virtual shared_ptr<ISession> session() const = 0;
         
         // this method will block so it's best to call it synchronously
-        virtual shared_ptr<IPlaybackData> playbackDataSync() = 0;
+        //virtual shared_ptr<IPlaybackData> playbackDataSync() = 0;
         virtual bool deepAsymmetricEquals(const ISong &rhs) const;
         virtual void freeUpMemory() const;
         

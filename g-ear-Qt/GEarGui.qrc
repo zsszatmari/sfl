@@ -14,21 +14,14 @@
         <file>QML/GradientTemplate.qml</file>
         <file>QML/ColorTemplate.qml</file>
         <file>QML/CustomizeSystemMenu.qml</file>
+        <file>QML/BottomBar.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>Image/test.png</file>
         <file>Image/TabGrey.png</file>
         <file>Image/SwitchGroove.png</file>
         <file>Image/Gear.ico</file>
-        <file>Image/Next.png</file>
-        <file>Image/Pause.png</file>
-        <file>Image/Play.png</file>
         <file>Image/player_volume.png</file>
-        <file>Image/Pre.png</file>
-        <file>Image/RepeatOneSong.png</file>
-        <file>Image/RepeatPlaylist.png</file>
-        <file>Image/Shuffle.png</file>
-        <file>Image/NoRepeat.png</file>
         <file>Image/Close.png</file>
         <file>Image/Maximize.png</file>
         <file>Image/Minimize.png</file>

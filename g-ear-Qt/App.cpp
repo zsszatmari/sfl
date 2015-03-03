@@ -8,9 +8,12 @@
 
 #include "App.h"
 #include "QTKeychain.h"
-#include "PlaybackWorker.h"
+#ifdef _WIN32
+#include "PlaybackWorkerDx.h"
+#endif
 #include "qtwebwindow.h"
 #include "BoostFileManager.h"
+#include "AudioDeviceUnionWorker.h"
 
 namespace Gear
 {
@@ -76,8 +79,14 @@ namespace Gear
 
     shared_ptr<IPlaybackWorker> method playbackWorker()
     {
-#pragma message("TODO: playbackworker")
+#ifdef _WIN32
+        static auto worker = shared_ptr<PlaybackWorkerDX>(new PlaybackWorkerDX());
+        //static auto unionWorker = AudioDeviceUnionWorker::create(worker, AppBase::playbackWorker());
+        //return unionWorker;
+        return worker;
+#else
         return AppBase::playbackWorker();
+#endif
     }
 
     shared_ptr<IJavascriptEngine> method createJavascriptEngine() const

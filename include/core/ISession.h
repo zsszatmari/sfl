@@ -39,6 +39,7 @@ namespace Gear
     
     using namespace Base;
     using std::vector;
+    using std::function;
     
     class PlaylistCategory;
     class IApp;
@@ -52,7 +53,7 @@ namespace Gear
     public:
         ISession(const shared_ptr<IApp> &app);
         // can call this with the same token until returns empty
-        virtual const vector<SongEntry> searchSync(const std::string &filter, std::string &token);
+        //virtual const vector<SongEntry> searchSync(const std::string &filter, std::string &token);
 
         PlaylistCategory categoryByTag(int tag);
         
@@ -61,7 +62,7 @@ namespace Gear
         virtual shared_ptr<IPlaylist> libraryPlaylist() = 0;
         virtual void refresh() = 0;
         virtual void addAllAccessToLibrary(const vector<shared_ptr<ISong>> &songs) = 0;
-        virtual shared_ptr<IPlaybackData> playbackDataSync(const ISong &song) const = 0;
+        virtual void playbackData(const ISong &song, const function<void(const shared_ptr<IPlaybackData> &)> data) const = 0;
         virtual ValidPtr<const vector<PlaylistCategory>> categories() const = 0;
         EventConnector connectedEvent();
         EventConnector playlistsChangeEvent();

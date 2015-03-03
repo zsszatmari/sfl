@@ -4,7 +4,7 @@
 
 using namespace sfl;
 
-TEST(Split, Chunk)
+TEST(Split, chunkR)
 {
 	std::vector<std::string> original = {"a","b","c","d","e"};
 	auto splitted = chunkR(2,original);
@@ -22,7 +22,7 @@ TEST(Split, Chunk)
 	ASSERT_EQ(splitted.at(2).at(0), "e");
 }
 
-TEST(Split, ChunkImmutable)
+TEST(Split, chunkRImmutable)
 {
 	std::vector<std::string> original = {"a","b","c","d","e"};
 	auto immutable = toImmutableVector(original);

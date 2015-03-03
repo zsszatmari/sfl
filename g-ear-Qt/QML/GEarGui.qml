@@ -63,42 +63,13 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    BottomBar {
         id: statusBar
+        objectName: "bottomBarObjectName"
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: 30
-
-        RowLayout {
-            anchors.fill: parent
-
-            Label {
-                anchors.centerIn: parent
-                text: "0 songs"
-            }
-
-            SettingButton {
-                id: settingsbutton
-
-                function updateSettingButtonState() {
-                    if (settingsWindow.visible) {
-                        settingsbutton.setStateToPressed()
-                    } else {
-                        settingsbutton.setStateToIdle()
-                    }
-                }
-
-                text: "Settings"
-                width: 80
-                height: 22
-                Layout.alignment: Qt.AlignRight
-                onClicked: {
-                    settingsWindow.visible = !settingsWindow.visible
-                    updateSettingButtonState()
-                }
-            }
-        }
     }
 
     Item {
@@ -106,7 +77,7 @@ ApplicationWindow {
         SettingsWindow {
             id: settingsWindow
             onVisibleChanged: {
-                settingsbutton.updateSettingButtonState()
+                statusBar.settingsButton.updateSettingButtonState()
             }
         }
     }

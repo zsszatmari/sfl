@@ -1,11 +1,12 @@
-#ifndef MAINWINDOWCONTROLLER_HPP
-#define MAINWINDOWCONTROLLER_HPP
+#ifndef MAINWINDOWCONTROLLER_H
+#define MAINWINDOWCONTROLLER_H
 
 #include <memory>
 #include <QThread>
 #include <QTimer>
 #include "WinFeature/SystemTrayIcon.h"
 #include "QmlController.h"
+#include "Theme/IconProvider.h"
 
 class MainWindowController : public QmlController
 {
@@ -47,6 +48,7 @@ private:
     bool _isResizing = false;
 
     QPoint _pressedPoint;
+    std::shared_ptr<IconProvider> _iconProvider = std::make_shared<IconProvider>();
 };
 
-#endif // MAINWINDOWCONTROLLER_HPP
+#endif // MAINWINDOWCONTROLLER_H

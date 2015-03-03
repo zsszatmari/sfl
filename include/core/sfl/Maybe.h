@@ -26,6 +26,26 @@ namespace sfl
 						   [](const M &a){return a;});
 	}
 
+	/*
+	 * The isNothing function returns True iff its argument is Nothing.
+	 */
+	template<typename MaybeType,typename M = typename boost::mpl::at_c<typename MaybeType::types,1>::type>
+	bool isNothing(const MaybeType &m)
+	{
+		return match<bool>(m, [](const Nothing &){return true;},
+						   [](const M &){return false;});
+	}
+
+	/*
+	 * The isJust function returns True iff its argument has a vslue.
+	 */
+	template<typename MaybeType,typename M = typename boost::mpl::at_c<typename MaybeType::types,1>::type>
+	bool isJust(const MaybeType &m)
+	{
+		return match<bool>(m, [](const Nothing &){return false;},
+						   [](const M &){return true;});
+	}
+
 	/**
 	  * Maps the f function over the Maybe, resulting in another Maybe which is just f(x) if m wasn't Nothing,
 	  * otherwise Nothing.
@@ -36,6 +56,8 @@ namespace sfl
 		return match<Maybe<B>>(m, [](const Nothing &)->Maybe<B>{return Nothing();},
 								  [&](const A &a)->Maybe<B>{return f(a);});
 	}
+
+
 }
 
 #endif

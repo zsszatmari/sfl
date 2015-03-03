@@ -42,6 +42,9 @@ MainWindowController::MainWindowController(QQmlEngine *engine)
 
     qmlEngine()->rootContext()->setContextProperty("mainWindowController", this);
 
+   // _iconProvider = std::make_shared<IconProvider>(nullptr);
+    qmlEngine()->addImageProvider("themeIconProvider", _iconProvider.get());
+
 
     qDebug() << "Starting shared memory status thread";
     SharedMemoryStatusThreadWorker *threadWorker = new SharedMemoryStatusThreadWorker();
@@ -150,8 +153,11 @@ void MainWindowController::bringMainWindowToFront()
 
 void MainWindowController::setWindowProperty()
 {
-    qmlWindow()->setFlags(qmlWindow()->flags()
-                          | Qt::FramelessWindowHint);
+    // see http://doc.qt.io/qt-5/Qt.html on these flags
+    // absolutely no border looks funny because it's hard to distinguish windows
+    // qmlWindow()->setFlags(qmlWindow()->flags() | Qt::FramelessWindowHint);
+    // thin border, no title bar:
+    qmlWindow()->setFlags((qmlWindow()->flags() | Qt::CustomizeWindowHint) & ~Qt::WindowTitleHint);
 
     connect(qmlWindow(), SIGNAL(mouseMoved(int, int)), this, SLOT(moveMouse(int, int)));
     connect(qmlWindow(), SIGNAL(mousePressed(int, int)), this, SLOT(pressMouse(int, int)));

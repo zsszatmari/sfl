@@ -18,14 +18,16 @@ void QmlControllerManager::initializeController(QQmlEngine *engine)
     _songListController = std::make_shared<SongListController>(engine);
     _mainWindowController = std::make_shared<MainWindowController>(engine);
     _playbackPanelController = std::make_shared<PlaybackPanelController>(engine);
+    _statusBarController = std::make_shared<StatusBarController>(engine);
 }
 
 void QmlControllerManager::setWindow(QQuickWindow *window)
 {
-    _songListController->setWindow(window);
     _mainWindowController->setWindow(window);
     _playbackPanelController->setWindow(window);
+    _songListController->setWindow(window);
     _settingPanelController->setWindow(window);
+    _statusBarController->setWindow(window);
 }
 
 QmlController *QmlControllerManager::controller(const QmlControllerManager::ControllerType &type)
@@ -42,6 +44,8 @@ QmlController *QmlControllerManager::controller(const QmlControllerManager::Cont
         return _settingPanelController.get();
     case SongListType:
         return _songListController.get();
+    case StatusBarType:
+        return _statusBarController.get();
     default:
         return nullptr;
     }

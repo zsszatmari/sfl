@@ -1,5 +1,5 @@
-#ifndef QMLCONTROLLERMANAGER_HPP
-#define QMLCONTROLLERMANAGER_HPP
+#ifndef QMLCONTROLLERMANAGER_H
+#define QMLCONTROLLERMANAGER_H
 
 #include <QObject>
 #include <memory>
@@ -9,6 +9,7 @@
 #include "PlaylistController.h"
 #include "SettingPanelController.h"
 #include "SongListController.h"
+#include "StatusBarController.h"
 
 class QmlControllerManager : public QObject
 {
@@ -20,7 +21,8 @@ public:
         PlaybackPanelType,
         PlaylistType,
         SettingPanelType,
-        SongListType
+        SongListType,
+        StatusBarType
     };
 
     explicit QmlControllerManager(QObject *parent = 0);
@@ -37,6 +39,7 @@ private:
     std::shared_ptr<PlaylistController> _playlistController;
     std::shared_ptr<SettingPanelController> _settingPanelController;
     std::shared_ptr<SongListController> _songListController;
+    std::shared_ptr<StatusBarController> _statusBarController;
 };
 
-#endif // QMLCONTROLLERMANAGER_HPP
+#endif // QMLCONTROLLERMANAGER_H

@@ -24,7 +24,7 @@ namespace Gear
     class ICategoriesTransformer;
     
     // this is considered a session by itself because everything that can be done with a session can be done with it
-    class core_export SessionManager final : public ISession, public MEMORY_NS::enable_shared_from_this<SessionManager>
+    class core_export SessionManager final : public MEMORY_NS::enable_shared_from_this<SessionManager>
     {
     public:
         static shared_ptr<SessionManager> create(const shared_ptr<IApp> &app);
@@ -49,6 +49,10 @@ namespace Gear
         virtual std::string sessionIdentifier() const;
         void recomputeCategories();
         virtual vector<int> possibleRatings() const;
+
+        EventConnector playlistsChangeEvent();
+        PlaylistCategory categoryByTag(int tag);
+        ValueConnector<bool> refreshingConnector();
         
     private:
         SessionManager(const shared_ptr<IApp> &app);
@@ -88,6 +92,13 @@ namespace Gear
         Base::SerialExecutor _recomputeExecutor;
         shared_ptr<bool> _recomputeState;
         AtomicPtr<vector<PlaylistCategory>> _categories;
+
+
+
+        EventSignal _connectedSignal;
+        EventSignal _playlistsChangeSignal;
+        ManagedValue<bool> _refreshing;
+        
     };
 }
 
