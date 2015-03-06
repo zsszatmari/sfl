@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     Theme/Painter.cpp \
     QmlController/QmlControllerManager.cpp \
     QmlController/StatusBarController.cpp \
-    Theme/IconProvider.cpp
+    Theme/IconProvider.cpp \
+    Theme/ImageProvider.cpp
 
 HEADERS  += App.h \
     QTPreferences.h \
@@ -59,9 +60,11 @@ HEADERS  += App.h \
     QmlController/PlaybackPanelController.h \
     Theme/Painter.h \
     QmlController/QmlControllerManager.h \
-    SharedMemoryStatusThreadWorker.h \
+    Thread/SharedMemoryStatusThreadWorker.h \
     QmlController/StatusBarController.h \
-    Theme/IconProvider.h
+    Theme/IconProvider.h \
+    Theme/ImageProvider.h \
+    Global/PreferenceKey.h
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../include/core

@@ -11,9 +11,10 @@ public:
     SettingPanelController(QQmlEngine *engine);
 
 public slots:
-    void addSettingsTabs();
     void buildConnect(bool isToConnect);
 
+protected:
+    void qmlWindowReady();
 };
 
 #endif // SETTINGPANELCONTROLLER_H

@@ -16,7 +16,7 @@ public:
         _qmlWindow = window;
         if (_qmlWindow)
         {
-            emit windowReady();
+            qmlWindowReady();
         }
     }
 
@@ -31,8 +31,7 @@ protected:
         return _qmlWindow;
     }
 
-signals:
-    void windowReady();
+    virtual void qmlWindowReady() = 0;
 
 private:
     QQmlEngine *_qmlEngine = nullptr;

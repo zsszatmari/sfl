@@ -15,9 +15,9 @@
         <file>QML/ColorTemplate.qml</file>
         <file>QML/CustomizeSystemMenu.qml</file>
         <file>QML/BottomBar.qml</file>
+        <file>QML/ImageTemplate.qml</file>
     </qresource>
     <qresource prefix="/images">
-        <file>Image/test.png</file>
         <file>Image/TabGrey.png</file>
         <file>Image/SwitchGroove.png</file>
         <file>Image/Gear.ico</file>

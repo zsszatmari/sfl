@@ -10,6 +10,7 @@
 #define G_Ear_ISong_h
 
 #include <string>
+#include <vector>
 #include "stdplus.h"
 #include MEMORY_H
 using MEMORY_NS::shared_ptr;
@@ -17,7 +18,8 @@ using MEMORY_NS::shared_ptr;
 namespace Gear
 {
     using std::string;
-    
+    using std::vector;
+
     class IPlaybackData;
     class ISession;
     class OfflineState;
@@ -63,13 +65,19 @@ namespace Gear
         virtual bool editable() const;
         bool editable(const string &key) const;
         
-        virtual void save() = 0;
+        // wrong api:
+        //virtual void save() = 0;
+        // not to be used for upserts. only updates specified fields
+        virtual void updateInDbAndRemote(const vector<string> &fields);
+        virtual void updateInDb(const vector<string> &fields) = 0;
+
         virtual shared_ptr<ISession> session() const = 0;
         
         // this method will block so it's best to call it synchronously
         //virtual shared_ptr<IPlaybackData> playbackDataSync() = 0;
         virtual bool deepAsymmetricEquals(const ISong &rhs) const;
         virtual void freeUpMemory() const;
+        void saveForTesting();
         
     private:
         // only permitted subclass is SongEntrySong

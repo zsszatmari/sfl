@@ -18,11 +18,43 @@ SettingPanelController::SettingPanelController(QQmlEngine *engine)
     : QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("preferencesPanel", this);
-
-    connect(this, SIGNAL(windowReady()), this, SLOT(addSettingsTabs()));
 }
 
-void SettingPanelController::addSettingsTabs()
+void SettingPanelController::buildConnect(bool isToConnect)
+{
+    QObject *senderObject = sender();
+    QQuickItem *senderSwitchItem = qobject_cast<QQuickItem *>(senderObject);
+
+    auto preferenceGroupVector =
+            IApp::instance()->preferencesPanel()->preferenceGroups();
+    for (auto it = preferenceGroupVector.begin();
+         it != preferenceGroupVector.end(); ++it)
+    {
+        PreferenceGroup group = (*it);
+        auto preferenceVector = group.preferences();
+        for (auto i = preferenceVector.begin(); i != preferenceVector.end(); ++i)
+        {
+            Preference preference = (*i);
+            if (senderSwitchItem->property("description").toString()
+                    == QString::fromStdString(preference.title()))
+            {
+                if (isToConnect)
+                {
+                    qDebug() << "Going to build connection";
+                    preference.setValue(1); // Connect
+                }
+                else
+                {
+                    qDebug() << "Going to disconnect";
+                    preference.setValue(0); // Disconnect
+                }
+                return;
+            }
+        }
+    }
+}
+
+void SettingPanelController::qmlWindowReady()
 {
     auto preferenceGroupVector =
             IApp::instance()->preferencesPanel()->preferenceGroups();
@@ -72,40 +104,6 @@ void SettingPanelController::addSettingsTabs()
                  default:
                     break;
                 }
-            }
-        }
-    }
-}
-
-void SettingPanelController::buildConnect(bool isToConnect)
-{
-    QObject *senderObject = sender();
-    QQuickItem *senderSwitchItem = qobject_cast<QQuickItem *>(senderObject);
-
-    auto preferenceGroupVector =
-            IApp::instance()->preferencesPanel()->preferenceGroups();
-    for (auto it = preferenceGroupVector.begin();
-         it != preferenceGroupVector.end(); ++it)
-    {
-        PreferenceGroup group = (*it);
-        auto preferenceVector = group.preferences();
-        for (auto i = preferenceVector.begin(); i != preferenceVector.end(); ++i)
-        {
-            Preference preference = (*i);
-            if (senderSwitchItem->property("description").toString()
-                    == QString::fromStdString(preference.title()))
-            {
-                if (isToConnect)
-                {
-                    qDebug() << "Going to build connection";
-                    preference.setValue(1); // Connect
-                }
-                else
-                {
-                    qDebug() << "Going to disconnect";
-                    preference.setValue(0); // Disconnect
-                }
-                return;
             }
         }
     }

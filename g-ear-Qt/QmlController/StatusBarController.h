@@ -10,8 +10,8 @@ public:
     StatusBarController(QQmlEngine *engine);
     ~StatusBarController();
 
-private slots:
-    void setStatusBarProperty();
+protected:
+    void qmlWindowReady();
 };
 
 #endif // STATUSBARCONTROLLER_H

@@ -47,7 +47,7 @@ Item {
                         width: 50
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/images/Image/test.png"
+                        source: ""
                     }
 
                     Text {

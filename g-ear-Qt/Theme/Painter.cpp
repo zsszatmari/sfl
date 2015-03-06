@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QQmlContext>
@@ -19,8 +18,6 @@ Painter::~Painter()
 
 void Painter::paint(const Gui::Color &color) const
 {
-    qDebug() << "painting color";
-
     QQmlEngine *engine = qmlEngine(_parent);
     QQmlComponent component(engine);
 
@@ -52,22 +49,90 @@ void Painter::paint(const Gui::Color &color) const
     rectangle->setProperty("z", _zOrder);
 }
 
-#pragma message("TODO")
 void Painter::paint(const Gui::NamedImage &image) const
 {
+    if (_action == Painter::AddImageAction)
+    {
+        QQmlEngine *engine = qmlEngine(_parent);
+        QQmlComponent component(engine);
 
+        component.loadUrl(QUrl("qrc:/qml/QML/ImageTemplate.qml"));
+        QQuickItem *imageItem = qobject_cast<QQuickItem *>(component.create());
+
+        if (_fillParent)
+        {
+            imageItem->setProperty("fillParent", true);
+        }
+        else
+        {
+            imageItem->setProperty("fillParent", false);
+            imageItem->setProperty("x", _leftTopX);
+            imageItem->setProperty("y", _leftTopY);
+            imageItem->setProperty("width", _width);
+            imageItem->setProperty("height", _height);
+        }
+        _imageProvider->addImage(QString::fromStdString(image.imageName()));
+        imageItem->setProperty("source", "image://"
+                               + _imageProviderName
+                               + "/" + QString::fromStdString((image.imageName())));
+        imageItem->setParentItem(_parent);
+        imageItem->setProperty("z", _zOrder);
+    }
+    else if (_action == Painter::SetImageAction)
+    {
+        _imageProvider->addImage(QString::fromStdString(image.imageName()));
+        _parent->setProperty("source", "image://"
+                             + _imageProviderName
+                             + "/" + QString::fromStdString((image.imageName())));
+        _parent->setProperty("z", _zOrder);
+    }
 }
 
-#pragma message("TODO")
 void Painter::paint(const Gui::BitmapImage &image) const
 {
+    if (_action == Painter::AddImageAction)
+    {
+        QQmlEngine *engine = qmlEngine(_parent);
+        QQmlComponent component(engine);
 
+        component.loadUrl(QUrl("qrc:/qml/QML/ImageTemplate.qml"));
+        QQuickItem *imageItem = qobject_cast<QQuickItem *>(component.create());
+
+        if (_fillParent)
+        {
+            imageItem->setProperty("fillParent", true);
+        }
+        else
+        {
+            imageItem->setProperty("fillParent", false);
+            imageItem->setProperty("x", _leftTopX);
+            imageItem->setProperty("y", _leftTopY);
+            imageItem->setProperty("width", _width);
+            imageItem->setProperty("height", _height);
+        }
+        _imageProvider->addImage(QString::fromStdString(image.imageName()),
+                                 (unsigned char *)&(image.data().data()[0]),
+                image.data().size());
+        imageItem->setProperty("source", "image://"
+                               + _imageProviderName
+                               + "/" + QString::fromStdString((image.imageName())));
+        imageItem->setParentItem(_parent);
+        imageItem->setProperty("z", _zOrder);
+    }
+    else if (_action == Painter::SetImageAction)
+    {
+        _imageProvider->addImage(QString::fromStdString(image.imageName()),
+                                 (unsigned char *)&(image.data().data()[0]),
+                image.data().size());
+        _parent->setProperty("source", "image://"
+                             + _imageProviderName
+                             + "/" + QString::fromStdString((image.imageName())));
+        _parent->setProperty("z", _zOrder);
+    }
 }
 
 void Painter::paint(const Gui::Gradient &gradient) const
 {
-    qDebug() << "painting gradient";
-
     QQmlEngine *engine = qmlEngine(_parent);
     QQmlComponent component(engine);
 

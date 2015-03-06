@@ -28,6 +28,9 @@ public:
 
     Q_INVOKABLE void playSong(const int &rowIndex);
 
+protected:
+    void qmlWindowReady();
+
 private:
     std::vector<Gear::SongEntry> _selectedSongs;
     std::shared_ptr<SongListModel> _songListModel;

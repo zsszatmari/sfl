@@ -28,10 +28,12 @@ public:
 signals:
     void startWork();
 
+protected:
+    void qmlWindowReady();
+
 private slots:
     void onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void bringMainWindowToFront();
-    void setWindowProperty();
     void makeWindowRunInBackground();
     void forceQuitApp();
 

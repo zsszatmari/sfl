@@ -53,6 +53,8 @@ namespace Gear
         EventConnector playlistsChangeEvent();
         PlaylistCategory categoryByTag(int tag);
         ValueConnector<bool> refreshingConnector();
+
+        virtual void search(const std::string &filter);
         
     private:
         SessionManager(const shared_ptr<IApp> &app);
@@ -67,19 +69,6 @@ namespace Gear
         ATOMIC_NS::atomic<bool> _offline;
         SignalConnection _fiveStarConnection;
         
-        struct Unions
-        {
-            vector<PlaylistCategory> categories;
-            UNORDERED_NS::unordered_map<std::string, shared_ptr<UnionPlaylist>> playlists;
-            shared_ptr<UnionPlaylist> libraryPlaylist;
-            shared_ptr<UnionPlaylist> thumbsUpPlaylist; 
-            shared_ptr<IPlaylist> highlyRatedPlaylist;
-            
-            shared_ptr<IPlaylist> artistsForPhone;
-        };
-        static Unions createUnions();
-        
-        const Unions _unions;
         shared_ptr<IPlaylist> _albumArtistsForPhone;
         
         const shared_ptr<ISession> _offlineSession;

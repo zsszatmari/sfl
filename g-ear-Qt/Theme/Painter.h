@@ -8,11 +8,19 @@
 #include "Gui/IPainter.h"
 #include "Gui/Color.h"
 #include "Gui/BitmapImage.h"
+#include "Gui/NamedImage.h"
 #include "Gui/Gradient.h"
+#include "ImageProvider.h"
 
 class Painter : public Gui::IPainter
 {
 public:
+    enum Action
+    {
+        UnknownAction,
+        AddImageAction,
+        SetImageAction
+    };
     Painter(QQuickItem *parentItem);
     virtual ~Painter();
 
@@ -66,6 +74,17 @@ public:
         _fillParent = fillParent;
     }
 
+    inline void setImageProvider(const QString &imageProviderName, std::shared_ptr<ImageProvider> &imageProvider)
+    {
+        _imageProviderName = imageProviderName;
+        _imageProvider = imageProvider;
+    }
+
+    inline void setAction(Action action)
+    {
+        _action = action;
+    }
+
 private:
     int _zOrder = 0;
     int _leftTopX = 0;
@@ -77,6 +96,9 @@ private:
     bool _fillParent = false;
     QString _objectName = "";
     QQuickItem *_parent = nullptr;
+    QString _imageProviderName;
+    std::shared_ptr<ImageProvider> _imageProvider;
+    Action _action = UnknownAction;
 };
 
 #endif // PAINTER_HPP

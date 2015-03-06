@@ -2,6 +2,7 @@
 #define SFL_IMMUTABLEVECTOR_H
 
 #include <atomic>
+#include <cassert>
 #include "sfl/Prelude.h"
 
 namespace sfl

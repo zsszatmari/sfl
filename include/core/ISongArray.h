@@ -53,7 +53,6 @@ namespace Gear
         virtual vector<shared_ptr<ISongIntent>> songIntents(const vector<SongEntry> &songs, const string &fieldHint) const;
         virtual vector<pair<string, vector<shared_ptr<ISongIntent>>>> songIntentSubMenus(const vector<SongEntry> &songs) const;
         virtual const string emptyText() const;
-        virtual void songsLeft(unsigned long count);
         // unsorted, unordered values (makes no sense anymore)
         //virtual ValidPtr<const vector<SongEntry>> rawSongs() const = 0;
         // possibly unsorted, but filtered values
@@ -93,6 +92,7 @@ namespace Gear
         virtual vector<std::string> all(const string &field) const = 0;
 
         SortedSongArray &impl();
+        virtual void songsLeft(unsigned long count) = 0;
 
     private:
         // only possible direct descendant is SortedSongArray, this is to ensure that impl() works 

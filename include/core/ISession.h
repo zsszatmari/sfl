@@ -40,7 +40,8 @@ namespace Gear
     using namespace Base;
     using std::vector;
     using std::function;
-    
+    using std::string;
+
     class PlaylistCategory;
     class IApp;
     class IPlaylist;
@@ -52,14 +53,13 @@ namespace Gear
     {        
     public:
         ISession(const shared_ptr<IApp> &app);
-        // can call this with the same token until returns empty
-        //virtual const vector<SongEntry> searchSync(const std::string &filter, std::string &token);
+        virtual void search(const std::string &filter) = 0;
 
         PlaylistCategory categoryByTag(int tag);
         
         virtual ~ISession();
         // needed by RemoveFromLibraryIntent
-        virtual shared_ptr<IPlaylist> libraryPlaylist() = 0;
+        // virtual shared_ptr<IPlaylist> libraryPlaylist() = 0;
         virtual void refresh() = 0;
         virtual void addAllAccessToLibrary(const vector<shared_ptr<ISong>> &songs) = 0;
         virtual void playbackData(const ISong &song, const function<void(const shared_ptr<IPlaybackData> &)> data) const = 0;
@@ -81,6 +81,8 @@ namespace Gear
         virtual void setOffline(bool offline);
         virtual bool saveForOfflinePossible() const;
         virtual void dispose();
+        virtual void fetchDynamic(const string &playlistId) = 0;
+        virtual void clearDynamic(const string &playlistId) = 0;
         
     protected:
         EventSignal _connectedSignal;

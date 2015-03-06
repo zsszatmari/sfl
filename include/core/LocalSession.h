@@ -20,17 +20,13 @@ namespace Gear {
 	public:
 		virtual void init(const shared_ptr<LocalSession> &session);
 
-		virtual shared_ptr<IPlaylist> libraryPlaylist();
 		virtual void refresh() = 0;
 
-        virtual vector<shared_ptr<IPlaylist>> playlists();
 		virtual vector<SongEntry> addSongsToPlaylistSync(const string &playlistId, const vector<shared_ptr<ISong>> &songs) = 0;
 
 		virtual void addAllAccessToLibrary(const vector<shared_ptr<ISong>> &songs);
 		virtual shared_ptr<IPlaybackData> playbackDataSync(const ISong &song) const;
 		virtual ValidPtr<const vector<PlaylistCategory>> categories() const;
-
-		virtual void createUserPlaylist(const vector<shared_ptr<ISong>> &songs, const string &name);
 
 		virtual void removePlaylist(const shared_ptr<IPlaylist> &playlist);
 		virtual void modifySongs(const vector<string> &ids, const std::map<string, string> &changedStrings, const std::map<string, uint64_t> &changedInts);

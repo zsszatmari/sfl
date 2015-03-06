@@ -13,6 +13,8 @@ namespace Gear
 		virtual void process(char *data, size_t num) = 0;
 		virtual void notifyChange(bool legacy = false) = 0;
 
+		virtual std::vector<std::string> bandLabels() const = 0;
+		
 		virtual std::vector<std::string> queryPresetNames() const = 0;
 		virtual int currentPreset() const = 0;
 		virtual void selectPreset(size_t index) = 0;
@@ -20,6 +22,8 @@ namespace Gear
 		virtual void saveCurrentPreset(const std::string &name) = 0;
 		virtual void deleteCurrentPreset() = 0;
 		virtual bool currentModifiable() const = 0;
+		virtual bool currentModified() const = 0;
+		virtual void setWiden(bool on) = 0;
 
 
 		virtual ~IEqualizer();

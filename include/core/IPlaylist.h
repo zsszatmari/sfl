@@ -59,7 +59,8 @@ namespace Gear
         virtual shared_ptr<ISession> session() const;
         
         Base::ValueConnector<vector<SongGrouping>> availableGroupingsConnector();
-        virtual void selectGrouping(const SongGrouping &grouping);
+        // pass true as second argument if and only if double clicked
+        virtual void selectGrouping(const SongGrouping &grouping, bool play);
         Base::ValueConnector<SongGrouping> selectedGroupingConnector();
         virtual void setFilterPredicate(const SongPredicate &f);
         const SongPredicate & filterPredicate() const;
@@ -73,7 +74,8 @@ namespace Gear
         static SortDescriptor sortDescriptorGlobal();
         std::pair<string,bool> sortKeyAndAscending() const;
         virtual void refresh();
-        
+        shared_ptr<IPlaylist> previous() const;
+
         //virtual bool saveForOfflineAsPlaylist() const;
     
     protected:
@@ -84,7 +86,8 @@ namespace Gear
         
         SongPredicate _filterPredicate;
         const weak_ptr<ISession> _session;
-        
+        shared_ptr<IPlaylist> _previous;
+
     private:
         const shared_ptr<const ISongArray> songArray() const;
         

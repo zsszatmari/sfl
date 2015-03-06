@@ -19,12 +19,18 @@ public:
                                           const QString &id,
                                           bool start);
 
+    Q_INVOKABLE void doFilter(const QString &filter);
+
+protected:
+    void qmlWindowReady();
+
 private:
     const std::shared_ptr<Gear::IPlaylist> findPlaylistById(const QString &category,
                                                                const QString &id);
 
 private:
     std::shared_ptr<PlaylistCategoryModel> _playlistCategoryModel;
+    Base::SignalConnection _playlistCategoryConnection ;
 };
 
 #endif // PLAYLISTCONTROLLER_H

@@ -4,6 +4,7 @@
 #include <functional>
 #include "boost/mpl/at.hpp"
 #include "sfl/sum.h"
+#include "sfl/Prelude.h"
 
 namespace sfl
 {
@@ -57,7 +58,25 @@ namespace sfl
 								  [&](const A &a)->Maybe<B>{return f(a);});
 	}
 
+	template<typename R,typename MaybeType = typename R::value_type,typename M = typename boost::mpl::at_c<typename MaybeType::types,1>::type>
+	std::vector<M> catMaybes(const R &v)
+	{
+		std::vector<M> ret;
+		ret.reserve(length(v));
+		for (const auto &item : v) {
+			match<void>(item, [](const Nothing &){},
+						[&](const M &m){ret.push_back(m);});
+		}
+		return std::move(ret);
+	}
 
+	template<typename R,typename M = typename R::value_type>
+	Maybe<M> rangeToMaybe(const R &r)
+	{
+		return length(r) == 0 
+				 ? Maybe<M>(Nothing())
+				 : Maybe<M>(head(r));
+	}
 }
 
 #endif

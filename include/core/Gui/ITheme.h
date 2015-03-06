@@ -64,6 +64,7 @@ namespace Gui
 		virtual shared_ptr<IPaintable> shuffleIcon(bool active) const = 0;
 		virtual shared_ptr<IPaintable> repeatIcon(bool active) const = 0;
 		virtual shared_ptr<IPaintable> shareIcon(bool active) const = 0;
+		virtual shared_ptr<IPaintable> eqIcon(bool active) const;
 
 		virtual Color textHighlightColor() const = 0;
 		virtual Color textColor() const = 0;
@@ -105,7 +106,7 @@ namespace Gui
         const Style & style() const;
 
 		virtual Gui::Color selectedTextBackground() const;
-        
+
     protected:
     	Style _style;
     };

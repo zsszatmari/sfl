@@ -111,3 +111,8 @@ void SongListController::playSong(const int &rowIndex)
 {
     Gear::IApp::instance()->player()->play(_songListModel->songs().at(rowIndex));
 }
+
+void SongListController::qmlWindowReady()
+{
+
+}

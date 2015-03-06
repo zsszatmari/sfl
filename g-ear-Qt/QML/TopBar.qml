@@ -83,21 +83,91 @@ Item {
     }
 
     Item {
+        id: volumeSliderItem
+
+        anchors.left: controlPanel.right
+        anchors.leftMargin: 20
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 5
+        width: 150
+        height: 20
+
+        Image {
+            id: volumeIcon
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            width: 20
+            height: 20
+            smooth: true
+            source: "qrc:/images/Image/player_volume.png"
+        }
+
+        Slider {
+            id: volumeSlider
+            objectName: "volumeSliderObject"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: volumeIcon.right
+            anchors.leftMargin: 5
+            anchors.right: parent.right
+
+            style: SliderStyle {
+                groove: Rectangle {
+                    implicitWidth: 80
+                    implicitHeight: 5
+                    Rectangle {
+                        width: parent.width * control.value
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        color: "#1E90FF"
+                        radius: 5
+                    }
+                    color: "gray"
+
+                    radius: 5
+                }
+                handle: Rectangle {
+                    anchors.centerIn: parent
+                    color: control.pressed ? "white" : "lightgray"
+                    border.color: "gray"
+                    border.width: 1
+                    implicitWidth: 15
+                    implicitHeight: 15
+                    radius: 15
+                }
+
+            }
+
+            onValueChanged: {
+                playbackController.setVolume(volumeSlider.value)
+            }
+
+            onPressedChanged: {
+                if (!pressed) {
+                    playbackController.saveVolume(volumeSlider.value)
+                }
+            }
+        }
+    }
+
+    Item {
         id: songInfo
         objectName: "songInfoObjectName"
         property string title: ""
         property string artist: ""
         property string album: ""
 
-        anchors.left: controlPanel.right
+        anchors.left: volumeSliderItem.right
+        anchors.leftMargin: 20
+
+        anchors.right: progressSliderItem.left
+        anchors.rightMargin: 20
 
         anchors.top: parent.top
         anchors.topMargin: 15
 
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
-
-        anchors.right: progressSliderItem.left
 
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -127,8 +197,8 @@ Item {
     Item {
         id: progressSliderItem
 
-        anchors.right: volumeSliderItem.left
-        anchors.rightMargin: 50
+        anchors.right: searchItem.left
+        anchors.rightMargin: 20
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 5
@@ -149,12 +219,10 @@ Item {
 
         Slider {
             id: progressSlider
-            objectName: "progressSliderObjectName"
-            property real progressRatio: 0.0
+            objectName: "progressSliderObject"
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             width: 200
-            value: progressRatio
 
             style: SliderStyle {
                 groove: Rectangle {
@@ -182,6 +250,20 @@ Item {
                     radius: 15
                 }
             }
+
+            onValueChanged: {
+                if (progressSlider.pressed) {
+                    playbackController.setProgressRatio(progressSlider.value)
+                } else {
+                    playbackController.saveRatio(progressSlider.value)
+                }
+            }
+
+            onPressedChanged: {
+                if (!pressed) {
+                    playbackController.saveRatio(progressSlider.value)
+                }
+            }
         }
 
         Text {
@@ -195,61 +277,27 @@ Item {
         }
     }
 
-
     Item {
-        id: volumeSliderItem
+        id: searchItem
+        objectName: "searchItemObject"
+        property alias filter: filterTextField.text
 
         anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.rightMargin: 30
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 5
-        width: 180
-        height: 20
 
-        Image {
-            id: volumeIcon
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            width: 20
-            height: 20
-            smooth: true
-            source: "qrc:/images/Image/player_volume.png"
-        }
+        width: 120
+        height: 22
 
-        Slider {
-            id: volumeSlider
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: volumeIcon.right
-            anchors.leftMargin: 5
-            anchors.right: parent.right
-            value: 0.5
+        TextField {
+            id: filterTextField
+            anchors.fill: parent
+            placeholderText: "Search"
+            horizontalAlignment: TextInput.AlignHCenter
 
-            style: SliderStyle {
-                groove: Rectangle {
-                    implicitWidth: 80
-                    implicitHeight: 5
-                    Rectangle {
-                        width: parent.width * control.value
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        color: "#1E90FF"
-                        radius: 5
-                    }
-                    color: "gray"
-
-                    radius: 5
-                }
-                handle: Rectangle {
-                    anchors.centerIn: parent
-                    color: control.pressed ? "white" : "lightgray"
-                    border.color: "gray"
-                    border.width: 1
-                    implicitWidth: 15
-                    implicitHeight: 15
-                    radius: 15
-                }
-
+            onTextChanged: {
+                playlistController.doFilter(searchItem.filter)
             }
         }
     }

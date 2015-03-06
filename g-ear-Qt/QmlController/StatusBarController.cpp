@@ -11,8 +11,6 @@ StatusBarController::StatusBarController(QQmlEngine *engine) :
     QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("statusBarController", this);
-
-    connect(this, SIGNAL(windowReady()), this, SLOT(setStatusBarProperty()));
 }
 
 StatusBarController::~StatusBarController()
@@ -20,7 +18,7 @@ StatusBarController::~StatusBarController()
 
 }
 
-void StatusBarController::setStatusBarProperty()
+void StatusBarController::qmlWindowReady()
 {
     QQuickItem *bottomBar = qmlWindow()->findChild<QQuickItem *>("bottomBarObjectName");
     auto paintable = Gear::IApp::instance()->themeManager()->style().get("general bottombar").paintable();

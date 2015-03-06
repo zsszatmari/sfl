@@ -36,6 +36,7 @@ namespace Gear
 #define inAppIdentifier songs
 #endif
         virtual string inAppIdentifier() const = 0;
+        string serviceIdentifier() const;
 #ifndef inAppNecessary
 #define inAppNecessary art
         virtual bool inAppNecessary() const = 0;

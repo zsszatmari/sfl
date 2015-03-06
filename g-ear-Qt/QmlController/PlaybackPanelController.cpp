@@ -10,13 +10,15 @@
 #include "Gui/IPaintable.h"
 #include "sfl/just_ptr.h"
 #include "Theme/Painter.h"
+#include "PlaybackController.h"
+#include "IPreferences.h"
+#include "Global/PreferenceKey.h"
 
 PlaybackPanelController::PlaybackPanelController(QQmlEngine *engine)
     : QmlController(engine)
 {
     qmlEngine()->rootContext()->setContextProperty("playbackController", this);
-
-    connect(this, SIGNAL(windowReady()), this, SLOT(setPlaybackConnection()));
+    qmlEngine()->addImageProvider("albumImageProvider", _albumImageProvider.get());
 }
 
 PlaybackPanelController::~PlaybackPanelController()
@@ -39,7 +41,27 @@ void PlaybackPanelController::play()
     Gear::IApp::instance()->player()->play();
 }
 
-void PlaybackPanelController::setPlaybackConnection()
+void PlaybackPanelController::setProgressRatio(const float &ratio)
+{
+    Gear::IApp::instance()->player()->setRatio(ratio);
+}
+
+void PlaybackPanelController::setVolume(const float &volume)
+{
+    Gear::PlaybackController::instance()->setVolume(volume);
+}
+
+void PlaybackPanelController::saveRatio(const float &ratio)
+{
+    Gear::IApp::instance()->preferences().setFloatForKey(PROGRESS_RATION_KEY, ratio);
+}
+
+void PlaybackPanelController::saveVolume(const float &volume)
+{
+    Gear::IApp::instance()->preferences().setFloatForKey(VOLUME_KEY, volume);
+}
+
+void PlaybackPanelController::qmlWindowReady()
 {
     QQuickItem *topBar = qmlWindow()->findChild<QQuickItem *>("topBarObjectName");
     auto paintable = Gear::IApp::instance()->themeManager()->style().get("general topbar").paintable();
@@ -48,12 +70,14 @@ void PlaybackPanelController::setPlaybackConnection()
     painter.setZOrder(-1);
     paintable->paint(painter);
 
+    restoreRatio();
+    restoreVolume();
+
     _playingConnection = Gear::IApp::instance()->player()->playingConnector()
             .connect([this](const bool isPlaying)
     {
         QObject *playPauseButton = qmlWindow()->findChild<QObject *>("playPauseButtonObjectName");
         playPauseButton->setProperty("isPlaying", isPlaying);
-        qDebug() << "Now the play status: " << isPlaying;
     });
 
     _shuffleConnection = Gear::IApp::instance()->player()->shuffle().connector()
@@ -61,7 +85,6 @@ void PlaybackPanelController::setPlaybackConnection()
     {
         QObject *shuffleIconObject = qmlWindow()->findChild<QObject *>("shuffleIconObject");
         shuffleIconObject->setProperty("shuffleActive", isShuffle);
-        qDebug() << "Now the shuffle status: " << isShuffle;
     });
 
     _repeatConnection = Gear::IApp::instance()->player()->repeat().connector()
@@ -80,7 +103,6 @@ void PlaybackPanelController::setPlaybackConnection()
             repeatIconObject->setProperty("repeatActive", true);
             break;
         }
-        qDebug() << "Now the repeat mode: " << (int)repeatMode;
     });
 
     _elapsedConnection = Gear::IApp::instance()->player()->elapsedTimeConnector()
@@ -88,7 +110,6 @@ void PlaybackPanelController::setPlaybackConnection()
     {
         QObject *elapsedTime = qmlWindow()->findChild<QObject *>("elapsedTimeObjectName");
         elapsedTime->setProperty("elapsedTimeStr", QString::fromStdString(str));
-        qDebug() << "Now the elapsed time: " << QString::fromStdString(str);
     });
 
     _remainingConnection = Gear::IApp::instance()->player()->remainingTimeConnector()
@@ -96,15 +117,17 @@ void PlaybackPanelController::setPlaybackConnection()
     {
         QObject *remainingTime = qmlWindow()->findChild<QObject *>("remainingTimeObjectName");
         remainingTime->setProperty("remainingTimeStr", QString::fromStdString(str));
-        qDebug() << "Now the remaining time: " << QString::fromStdString(str);
     });
 
     _ratioConnection = Gear::IApp::instance()->player()->songRatioConnector()
             .connect([this](const float ratio)
     {
-        QObject *progressSlider = qmlWindow()->findChild<QObject *>("progressSliderObjectName");
-        progressSlider->setProperty("progressRatio", ratio);
-        qDebug() << "Now playing ratio is: " << ratio;
+        QObject *progressSlider = qmlWindow()->findChild<QObject *>("progressSliderObject");
+        bool pressed = progressSlider->property("pressed").toBool();
+        if (!pressed)
+        {
+            progressSlider->setProperty("value", ratio);
+        }
     });
 
     _SongInfoConnection = Gear::IApp::instance()->player()->songEntryConnector()
@@ -114,7 +137,31 @@ void PlaybackPanelController::setPlaybackConnection()
         songInfo->setProperty("title", QString::fromStdString(songEntry.song()->title()));
         songInfo->setProperty("artist", QString::fromStdString(songEntry.song()->artist()));
         songInfo->setProperty("album", QString::fromStdString(songEntry.song()->album()));
+        QObject *albumImage = qmlWindow()->findChild<QObject *>("albumImageObject");
+        long imageSize = albumImage->property("width").toInt() * albumImage->property("height").toInt();
+        _promisedImage = Gear::IApp::instance()->player()->albumArt(imageSize);
+        _AlbumImageConnection = _promisedImage->connector()
+                .connect([this](const shared_ptr<Gui::IPaintable> &image)
+        {
+            QQuickItem *imageItem = qmlWindow()->findChild<QQuickItem *>("albumImageObject");
+            Painter albumImagePainter(imageItem);
+            albumImagePainter.setAction(Painter::SetImageAction);
+            albumImagePainter.setImageProvider("albumImageProvider", _albumImageProvider);
+            image->paint(albumImagePainter);
+        });
     });
+}
 
-    disconnect(this, SIGNAL(windowReady()), this, SLOT(setPlaybackConnection()));
+void PlaybackPanelController::restoreRatio()
+{
+    QObject *progressSlider = qmlWindow()->findChild<QObject *>("progressSliderObject");
+    float ratio = Gear::IApp::instance()->preferences().floatForKey(PROGRESS_RATION_KEY);
+    progressSlider->setProperty("value", ratio);
+    setProgressRatio(ratio);
+}
+
+void PlaybackPanelController::restoreVolume()
+{
+    QObject *volumeSlider = qmlWindow()->findChild<QObject *>("volumeSliderObject");
+    volumeSlider->setProperty("value", Gear::IApp::instance()->preferences().floatForKey(VOLUME_KEY));
 }

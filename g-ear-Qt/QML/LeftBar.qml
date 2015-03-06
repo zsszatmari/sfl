@@ -24,28 +24,13 @@ Rectangle {
         Rectangle {
             id: bottomPart
             Layout.minimumHeight: 100
-            color: "lightblue"
+            color: "#f5f5f5"
 
-            Rectangle {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-
-
-                width: {
-                    var min = parent.width < parent.height ? parent.width : parent.height;
-                    return min * 4 / 5;
-                }
+            Image {
+                objectName: "albumImageObject"
+                anchors.centerIn: parent
+                width: Math.min(parent.width, parent.height) * 9 / 10
                 height: width
-                radius: 2
-
-                Image {
-                    id: bottomImage
-                    anchors.fill: parent
-                    fillMode: Image.PreserveAspectFit
-                    source: "qrc:/images/Image/test.png"
-                }
             }
         }
     }

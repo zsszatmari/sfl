@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <QQuickItem>
 
-#include "SharedMemoryStatusThreadWorker.h"
+#include "Thread/SharedMemoryStatusThreadWorker.h"
 
 #ifdef _WIN32
 #include <QWinJumpList>
@@ -23,8 +23,6 @@ MainWindowController::MainWindowController(QQmlEngine *engine)
     : QmlController(engine)
     , _systemTrayIcon(std::make_shared<SystemTrayIcon>(this))
 {
-    connect(this, SIGNAL(windowReady()), this, SLOT(setWindowProperty()));
-
 #ifdef _WIN32
     QWinJumpListItem *quitTask = new QWinJumpListItem(QWinJumpListItem::Link);
     quitTask->setTitle(tr("Quit Gear"));
@@ -131,6 +129,19 @@ bool MainWindowController::windowMaximized()
     return false;
 }
 
+void MainWindowController::qmlWindowReady()
+{
+    // see http://doc.qt.io/qt-5/Qt.html on these flags
+    // absolutely no border looks funny because it's hard to distinguish windows
+    // qmlWindow()->setFlags(qmlWindow()->flags() | Qt::FramelessWindowHint);
+    // thin border, no title bar:
+    qmlWindow()->setFlags((qmlWindow()->flags() | Qt::CustomizeWindowHint) & ~Qt::WindowTitleHint);
+
+    connect(qmlWindow(), SIGNAL(mouseMoved(int, int)), this, SLOT(moveMouse(int, int)));
+    connect(qmlWindow(), SIGNAL(mousePressed(int, int)), this, SLOT(pressMouse(int, int)));
+    connect(qmlWindow(), SIGNAL(mouseReleased()), this, SLOT(releaseMouse()));
+}
+
 void MainWindowController::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger)
@@ -149,19 +160,6 @@ void MainWindowController::bringMainWindowToFront()
 #ifdef _WIN32
     SetForegroundWindow(HWND(qmlWindow()->winId()));
 #endif
-}
-
-void MainWindowController::setWindowProperty()
-{
-    // see http://doc.qt.io/qt-5/Qt.html on these flags
-    // absolutely no border looks funny because it's hard to distinguish windows
-    // qmlWindow()->setFlags(qmlWindow()->flags() | Qt::FramelessWindowHint);
-    // thin border, no title bar:
-    qmlWindow()->setFlags((qmlWindow()->flags() | Qt::CustomizeWindowHint) & ~Qt::WindowTitleHint);
-
-    connect(qmlWindow(), SIGNAL(mouseMoved(int, int)), this, SLOT(moveMouse(int, int)));
-    connect(qmlWindow(), SIGNAL(mousePressed(int, int)), this, SLOT(pressMouse(int, int)));
-    connect(qmlWindow(), SIGNAL(mouseReleased()), this, SLOT(releaseMouse()));
 }
 
 void MainWindowController::makeWindowRunInBackground()
