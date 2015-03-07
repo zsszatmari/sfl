@@ -25,17 +25,18 @@ namespace sfl
          * because of c++ limitation.
          */
         template<typename R,typename M = typename std::map<typename R::value_type::first_type,typename R::value_type::second_type>>
-        M fromList(const R &r)
+        M fromRange(const R &r)
         {
             return M(r.begin(),r.end());
         }
 
          /*
-          * Because of c++ limitations, this is jus a synonym for fromList. Semantically, an already ordered
+          * Because of c++ limitations, this is just a synonym for fromList. Semantically
+          , an already ordered
           * list should be passed here.
           */
         template<typename R,typename M = typename std::map<typename R::value_type::first_type,typename R::value_type::second_type>>
-        M fromAscList(const R &r)
+        M fromAscRange(const R &r)
         {
             return fromList(r);
         }

@@ -318,6 +318,24 @@ namespace sfl
         return std::move(ret);
     }
 
+    /*
+     * zip3 takes three lists and returns a list of triples, analogous to zip.
+     */
+    template<typename R,typename S,typename T, typename Rv = typename R::value_type, typename Sv = typename S::value_type, typename Tv = typename T::value_type>
+    std::vector<std::tuple<Rv,Sv,Tv>> zip3(const R &r, const S &s, const T &t)
+    {
+        std::vector<std::tuple<Rv,Sv,Tv>> ret;
+        auto itR = r.begin();
+        auto itS = s.begin();
+        auto itT = t.begin();
+        while (itR != r.end() && itS != s.end() && itT != t.end()) {
+            ret.push_back(std::make_tuple(*itR,*itS,*itT));
+            ++itR;
+            ++itS;
+            ++itT;
+        }
+        return std::move(ret);
+    }
 }
 
 #endif
