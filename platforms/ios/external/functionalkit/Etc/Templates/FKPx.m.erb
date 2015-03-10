@@ -1,0 +1,45 @@
+#import "FKP<%= n %>.h"
+#import <objc/runtime.h>
+<% 
+vars_and_selectors = selectors.zip(varnames)
+call_init_bit = (1..n).to_a.map { |i| "_#{i}:#{selectors[i-1]}" }.join(' ') 
+selector_bit = (1..n).to_a.map { |i| "_#{i}:(id)#{selectors[i-1]}" }.join(' ') 
+init_bit = (1..n).to_a.map { |i| "_#{i}:(id)new#{selectors[i-1]}" }.join(' ') 
+cls = "FKP#{n}"
+%>
+
+@interface <%= cls %> (private)
+<% selectors.each do |s| %>@property (strong) id <%= s %>;
+<% end %>@end
+
+@implementation <%= cls %>
+
+- (id)initWith<%= init_bit %> {
+    if (self = [super init]) {
+<%= vars_and_selectors.map { |i,v| "        #{v} = new#{i};" }.join("\n") %>
+    }
+    return self;
+}
+
++ (id)<%= init_bit %> {
+  return [[self alloc] initWith<%=init_bit%>];
+}
+
+- (NSString *)description {
+	return [NSString stringWithFormat:@"<%%s: <%= vars_and_selectors.map { |i,v| "#{i}=%@"}.join(' ') %>>", class_getName([self class]), <%= varnames.join(', ') %>];
+}
+
+#pragma mark NSObject methods.
+- (BOOL)isEqual:(id)object {
+    if (object == nil || ![[object class] isEqual:[self class]]) {
+        return NO;
+    } else {
+        <%= cls %> *other = (<%= cls %> *)object;
+		return <%= (varnames.zip(selectors)).map { |i,v| "[#{i} isEqual:other.#{v}]"}.join(" && ") %>;
+    }
+}
+
+- (NSUInteger)hash {
+    return <%= varnames.map { |i| "[#{i} hash]" }.join(" + ") %>;
+}
+@end

@@ -1,0 +1,4 @@
+--prefix=platforms/ios https://zsoltt@bitbucket.org/treasurebox/g-ear-ios.git master
+--prefix=platforms/mac https://zsoltt@bitbucket.org/treasurebox/g-ear-v2.git yosi
+--prefix=core/public/sfl https://treasurebox@github.com/treasurebox/sfl.git master
+--prefix=external/ffmpeg --squash https://github.com/FFmpeg/FFmpeg.git n2.5.2

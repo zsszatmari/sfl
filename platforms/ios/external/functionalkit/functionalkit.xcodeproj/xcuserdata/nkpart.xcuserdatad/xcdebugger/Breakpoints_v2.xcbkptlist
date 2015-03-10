@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "test/Extensions/NSArrayExtensionsUnitTest.m"
+            timestampString = "395145854.095641"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "-testCanGroupItemsUsingAKeyFunctionIntoADictionary"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[NSArrayExtensionsUnitTest testCanGroupItemsUsingAKeyFunctionIntoADictionary]"
+                  moduleName = "Tests"
+                  urlString = "file:///Users/nkpart/p/mogen/functionalkit/test/Extensions/NSArrayExtensionsUnitTest.m"
+                  timestampString = "395145936.713672"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "845">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[NSArrayExtensionsUnitTest testCanGroupItemsUsingAKeyFunctionIntoADictionary]"
+                  moduleName = "Tests"
+                  urlString = "file:///Users/nkpart/p/mogen/functionalkit/test/Extensions/NSArrayExtensionsUnitTest.m"
+                  timestampString = "395145936.716057"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "1799">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

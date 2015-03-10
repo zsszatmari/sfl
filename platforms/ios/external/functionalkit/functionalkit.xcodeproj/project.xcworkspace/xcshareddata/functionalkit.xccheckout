@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3B1D8249-AFA2-4291-BA40-1D9B0B9A7C5B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>functionalkit</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>93537634-A211-4624-AB12-9BD35AE2A790</key>
+		<string>ssh://github.com/mogeneration/functionalkit.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>functionalkit.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>93537634-A211-4624-AB12-9BD35AE2A790</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/mogeneration/functionalkit.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>93537634-A211-4624-AB12-9BD35AE2A790</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>93537634-A211-4624-AB12-9BD35AE2A790</string>
+			<key>IDESourceControlWCCName</key>
+			<string>functionalkit</string>
+		</dict>
+	</array>
+</dict>
+</plist>

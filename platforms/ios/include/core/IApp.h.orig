@@ -1,0 +1,120 @@
+//
+//  IApp.h
+//  G-Ear
+//
+//  Created by Zsolt Szatmári on 6/5/13.
+//
+//
+
+#ifndef __G_Ear__IApp__
+#define __G_Ear__IApp__
+
+#include "stdplus.h"
+#include "ManagedValue.h"
+#include "PlaylistCategory.h"
+#include "SortDescriptor.h"
+
+namespace Gui
+{
+    class ThemeManager;
+}
+
+namespace Gear
+{
+    using namespace Base;
+    using namespace Gui;
+    
+    enum class UserMessage
+    {
+        NoSongs,
+        ErrorRetrievingSongs
+    };
+    
+    class ISession;
+    class SessionManager;
+    class IKeychain;
+    class IPlayer;
+    class IPlaylist;
+    class ISongIntent;
+    class IWebWindow;
+    class IWebWindowDelegate;
+    class DragManager;
+    class ServiceManager;
+    class AlbumArtStash;
+    class IFileManager;
+    class IPreferences;
+    class IPreferencesPanel;
+    class LocalSession;
+    class IJavascriptEngine;
+    class IPlaybackWorker;
+    class SessionManager;
+    class SongEntry;
+    
+	class core_export IApp : public enable_shared_from_this<IApp>
+    {
+    public:
+        IApp();
+        virtual ~IApp();
+        virtual void editPlaylistName(const shared_ptr<IPlaylist> &playlist) = 0;
+        
+        virtual DragManager &dragManager() = 0;
+        virtual IPreferences &preferences() = 0;
+        virtual shared_ptr<IWebWindow> createWebWindow(const shared_ptr<IWebWindowDelegate> &delegate) = 0;
+        virtual string dataPath() const = 0;
+        shared_ptr<IPlaylist> selectedPlaylist() const;
+        bool userSelectedCategory(int tag, const shared_ptr<IPlaylist> &playlist = shared_ptr<IPlaylist>(), bool start = false, bool implicit = false);
+        void userSelectedPlaylist(const shared_ptr<IPlaylist> &playlist, bool start = false);
+        
+        virtual void showUserMessage(const UserMessage message) = 0;
+<<<<<<< HEAD
+        shared_ptr<ISession> sessionManager() const;
+        virtual shared_ptr<SessionManager> typedSessionManager() const = 0;
+=======
+        virtual shared_ptr<SessionManager> sessionManager() const = 0;
+>>>>>>> b4c4de480aa52e00f611d81f550569f8b05a3e89
+        virtual shared_ptr<ServiceManager> serviceManager() const = 0;
+        virtual shared_ptr<ThemeManager> themeManager() const = 0;
+        virtual shared_ptr<IPreferencesPanel> preferencesPanel() const = 0;
+        
+        virtual bool phoneInterface() = 0;
+
+        virtual void appStarted() = 0;
+        virtual shared_ptr<IPlayer> player() = 0;
+        static shared_ptr<IApp> instance();
+        virtual shared_ptr<IKeychain> keychain() = 0;
+        virtual shared_ptr<LocalSession> createLocalSession();
+        
+        virtual shared_ptr<AlbumArtStash> albumArtStash();
+        
+        static void registerInstance(shared_ptr<IApp> &app);
+        
+        ValueConnector<std::pair<PlaylistCategory,shared_ptr<IPlaylist>>>selectedPlaylistConnector();
+        
+        virtual void playFirstOfCurrentPlaylist() = 0;
+        virtual void addLowPriorityTask(const function<void()> &task) = 0;
+        
+        virtual void showRelated(const SongEntry &entry, const string &baseField) = 0;
+        virtual SortDescriptor defaultSongOrder() const = 0;
+        // only spotify uses this for now, so this is not mandatory yet
+        virtual void askForCredentials(const string &title, string &user, string &pass) {}
+        virtual bool trialMode() const;
+        virtual void freeUpMemory() = 0;
+        virtual IPlaybackWorker &playbackWorker() = 0;
+        
+        virtual shared_ptr<IFileManager> fileManager() const = 0;
+        virtual shared_ptr<IJavascriptEngine> createJavascriptEngine() const = 0;
+        void goBack();
+        
+    protected:
+        ManagedValue<std::pair<PlaylistCategory,shared_ptr<IPlaylist>>> _selectedPlaylist;
+        shared_ptr<AlbumArtStash> _albumArtStash;
+        
+        bool _userExplicitlySelected;
+        
+    private:
+        
+        virtual string imageCacheDirectory() const = 0;
+    };
+}
+
+#endif /* defined(__G_Ear__IApp__) */
