@@ -249,6 +249,21 @@ namespace sfl
                 : R(r.end(),r.end());
     }
 
+    /**
+     * foldl, applied to a binary operator, a starting value (typically the left-identity of the
+     * operator), and a list, reduces the list using the binary operator, from left to right.
+     * This is a recursive function.
+     */
+    template<typename F,typename R,typename A = typename R::value_type,typename B = typename std::result_of<F(A &&)>::type>
+    B foldlR(F &&f, const B &initial, const R &range)
+    {
+        return range.empty()
+                    ? initial
+                    : foldlR(f,
+                             f(initial,head(range)),
+                             tail(range)); 
+    }
+
     /*
      * span, applied to a predicate p and a range xs, returns a tuple where first element is longest prefix 
      * (possibly empty) of xs of elements that satisfy p and second element is the remainder of the list:
