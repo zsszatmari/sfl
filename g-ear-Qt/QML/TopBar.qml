@@ -7,6 +7,15 @@ Item {
     objectName: "topBarObjectName"
     height: 62
 
+    Image {
+        id: appLogo
+        anchors.left: parent.left
+        anchors.leftMargin: 2
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        source: "qrc:/images/Image/Gear.ico"
+    }
+
     CustomizeSystemMenu {
         width: 60; height: 20
         anchors.top: parent.top

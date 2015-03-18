@@ -50,10 +50,8 @@ MainWindowController::MainWindowController(QQmlEngine *engine)
     connect(threadWorker, SIGNAL(jobDone()), qApp, SLOT(quit()));
     connect(threadWorker, SIGNAL(bringToFrontSignal()),
             this, SLOT(bringMainWindowToFront()));
-    connect(this, SIGNAL(startWork()), threadWorker, SLOT(doWork()));
     connect(&_sharedMemoryStatusThread, SIGNAL(finished()), threadWorker, SLOT(deleteLater()));
     _sharedMemoryStatusThread.start();
-    emit startWork();
 
     connect(&_sharedMemoryTimer, SIGNAL(timeout()), threadWorker, SLOT(doWork()));
     _sharedMemoryTimer.start(10);

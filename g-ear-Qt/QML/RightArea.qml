@@ -9,6 +9,10 @@ Item {
         property int rightClickSelectedRowIndex: -1
         objectName: "songListTableView"
         selectionMode: SelectionMode.ExtendedSelection
+
+        backgroundVisible: true
+        alternatingRowColors: true
+
         onSortIndicatorColumnChanged: {
             var sortColumn = getColumn(sortIndicatorColumn);
             if (sortIndicatorOrder == Qt.AscendingOrder) {
@@ -38,25 +42,25 @@ Item {
             songListController.playSong(songlistView.currentRow)
         }
 
-        rowDelegate: Component {
-            Rectangle{
-                color: {
-                    if (styleData.row % 2 == 0)
-                        return "white"
-                    else
-                        return "#E0E0E0"
-                }
+//        rowDelegate: Component {
+//            Rectangle{
+//                color: {
+//                    if (styleData.row % 2 == 0)
+//                        return "white"
+//                    else
+//                        return "#E0E0E0"
+//                }
 
-                Rectangle {
-                    anchors.fill: parent
-                    visible: styleData.selected
-                    color: "steelblue"
-                }
+//                Rectangle {
+//                    anchors.fill: parent
+//                    visible: styleData.selected
+//                    color: "steelblue"
+//                }
 
-                border.color: styleData.row === songlistView.rightClickSelectedRowIndex ? "blue" : "black"
-                border.width: styleData.row === songlistView.rightClickSelectedRowIndex ? 2 : 0
-            }
-        }
+//                border.color: styleData.row === songlistView.rightClickSelectedRowIndex ? "blue" : "black"
+//                border.width: styleData.row === songlistView.rightClickSelectedRowIndex ? 2 : 0
+//            }
+//        }
 
         itemDelegate: Item {
             Text {

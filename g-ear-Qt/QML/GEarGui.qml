@@ -55,11 +55,12 @@ ApplicationWindow {
             id: leftBar
             width: 200
             Layout.minimumWidth: 100
-            Layout.maximumWidth: 500
+            Layout.maximumWidth: 300
         }
 
         RightArea {
             Layout.minimumWidth: 500
+            Layout.fillWidth: true
         }
     }
 

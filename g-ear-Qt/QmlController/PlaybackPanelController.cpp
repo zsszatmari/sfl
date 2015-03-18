@@ -143,12 +143,25 @@ void PlaybackPanelController::qmlWindowReady()
         _AlbumImageConnection = _promisedImage->connector()
                 .connect([this](const shared_ptr<Gui::IPaintable> &image)
         {
-            if (image) {
+            if (image)
+            {
                 QQuickItem *imageItem = qmlWindow()->findChild<QQuickItem *>("albumImageObject");
                 Painter albumImagePainter(imageItem);
                 albumImagePainter.setAction(Painter::SetImageAction);
                 albumImagePainter.setImageProvider("albumImageProvider", _albumImageProvider);
                 image->paint(albumImagePainter);
+
+                auto titleRule = Gear::IApp::instance()->themeManager()->style().get("playlistpanel nowplayingtitle");
+                auto titleRulePaintable = titleRule.paintable();
+
+                QQuickItem *titleItem = qmlWindow()->findChild<QQuickItem *>("nowPlayingTitleObject");
+                titleItem->setProperty("leftPadding", titleRule.padding().left);
+                titleItem->setProperty("topPadding", titleRule.padding().top);
+                titleItem->setProperty("bottomPadding", titleRule.padding().bottom);
+                Painter titlePainter(titleItem);
+                titlePainter.setFillParent(true);
+                titlePainter.setZOrder(-1);
+                titleRulePaintable->paint(titlePainter);
             }
         });
     });

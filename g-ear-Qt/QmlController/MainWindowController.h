@@ -25,9 +25,6 @@ public:
     Q_INVOKABLE void minimizeWindow();
     Q_INVOKABLE bool windowMaximized();
 
-signals:
-    void startWork();
-
 protected:
     void qmlWindowReady();
 

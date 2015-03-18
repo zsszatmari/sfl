@@ -95,51 +95,51 @@ int main(int argc, char *argv[])
     //printf("log\n"); fflush(NULL);
 
 #ifdef _WIN32
-    QSystemSemaphore sema("GEAR_MUSIC_PLAYER_KEY", 1, QSystemSemaphore::Open);
-    sema.acquire();
-    QSharedMemory mem("GEAR_MUSIC_PLAYER_KEY_WIN");
+    auto sema = std::make_shared<QSystemSemaphore>("GEAR_MUSIC_PLAYER_KEY", 1, QSystemSemaphore::Open);
+    sema->acquire();
+    auto mem = std::make_shared<QSharedMemory>("GEAR_MUSIC_PLAYER_KEY_WIN");
     std::cout << "Creating shared memory" << std::endl;
-    if (!mem.create(2))
+    if (!mem->create(2))
     {
         std::cout << "Creating shared memory failed" << std::endl;
         if (argv[1] == QString("--quit"))
         {
-            if (mem.attach())
+            if (mem->attach())
             {
-                mem.lock();
-                void *dataArea = mem.data();
+                mem->lock();
+                void *dataArea = mem->data();
                 bool quitApp = true;
                 std::memcpy(dataArea, &quitApp, 1);
-                mem.unlock();
-                mem.detach();
+                mem->unlock();
+                mem->detach();
             }
         }
         else
         {
-            if (mem.attach())
+            if (mem->attach())
             {
-                mem.lock();
-                void *dataArea = mem.data();
+                mem->lock();
+                void *dataArea = mem->data();
                 bool bringToFront = true;
                 std::memcpy(dataArea + 1, &bringToFront, 1);
-                mem.unlock();
-                mem.detach();
+                mem->unlock();
+                mem->detach();
             }
         }
 
-        sema.release();
+        sema->release();
         exit(0);
     }
     std::cout << "Created shared memory" << std::endl;
 
-    mem.lock();
-    void *dataArea = mem.data();
+    mem->lock();
+    void *dataArea = mem->data();
     bool notQuitApp = false;
     std::memcpy(dataArea, &notQuitApp, 1);
     bool notBringToFront = false;
     std::memcpy(dataArea + 1, &notBringToFront, 1);
-    mem.unlock();
-    sema.release();
+    mem->unlock();
+    sema->release();
 #endif
 
     shared_ptr<IExecutor> executor(new QtExecutor());
@@ -158,6 +158,8 @@ int main(int argc, char *argv[])
 
     int exitStatus = app.exec();
 
+    sema.reset();
+    mem.reset();
     qDebug() << "Returning exit status " << exitStatus;
 
     return exitStatus;
