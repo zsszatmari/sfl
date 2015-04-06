@@ -1,6 +1,7 @@
 #ifndef SFL_MAP_H
 #define SFL_MAP_H
 
+#include <map>
 #include <utility>
 #include "Prelude.h"
 
@@ -28,6 +29,15 @@ namespace sfl
         M fromRange(const R &r)
         {
             return M(r.begin(),r.end());
+        }
+
+        /*
+         * O(n) in case of std::map. Convert to a list of key/value pairs.
+         */
+        template<typename M,typename A = typename M::key_type,typename B = typename M::mapped_type,typename R = typename std::vector<std::pair<A,B>>>
+        R toVector(const M &m)
+        {
+            return R(m.begin(),m.end());
         }
 
          /*

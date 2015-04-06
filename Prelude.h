@@ -265,6 +265,17 @@ namespace sfl
                              tail(range)); 
     }
 
+    /* 
+     * takeWhile applied to a predicate p and a range xs, returns the longest prefix (possibly empty) 
+     * of xs of elements that satisfy p.
+     */
+    template<typename F,typename R>
+    R takeWhile(F &&p, const R &xs)
+    {
+        auto it = find_if(xs.begin(),xs.end(),[&p](const typename R::value_type &x){return !p(x);});
+        return R(xs.begin(),it);
+    }
+
     /*
      * span, applied to a predicate p and a range xs, returns a tuple where first element is longest prefix 
      * (possibly empty) of xs of elements that satisfy p and second element is the remainder of the list:
