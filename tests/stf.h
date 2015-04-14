@@ -49,7 +49,7 @@ extern std::vector<std::pair<std::string,std::function<void()>>> tests;
 
 inline int runTests()
 {
-	int passes = 0;
+	size_t passes = 0;
 	for (auto &test : tests) {
 		try {
 			test.second();

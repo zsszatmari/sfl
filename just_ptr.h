@@ -68,8 +68,9 @@ namespace sfl
 
 		just_ptr(const Unsafe &, T *ptr) :
 			_ptr(ptr),
-			_refCount(new std::atomic_int(1))
+			_refCount(new std::atomic_int())
 		{
+			*_refCount = 1;
 		}
 
 	private:

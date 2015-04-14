@@ -159,9 +159,10 @@ namespace sfl
 
 
 		ImmutableVector(int size) :
-			_refCount(new std::atomic_int(1)),
+			_refCount(new std::atomic_int()),
 			_size(size)
 		{
+			*_refCount = 1;
 			// _values left uninitialized
 		}
  

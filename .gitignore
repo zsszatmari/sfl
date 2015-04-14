@@ -3,3 +3,15 @@ test
 tests/Makefile
 *.cmake
 tests/test
+*.vcxproj
+tests/ALL_BUILD.vcxproj.filters
+tests/CMakeFiles
+tests/Debug
+tests/Win32
+tests/test.dir
+tests/Tests.dir
+*.filters
+*.opensdf
+*.sdf
+tests/sfltest.sln
+*.suo

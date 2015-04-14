@@ -1,47 +1,61 @@
 #ifndef SFL_SUM_H
 #define SFL_SUM_H
 
-#include "boost/variant.hpp"
+#include <cstdint>
 
 namespace sfl
 {
-	// based on lurscher http://stackoverflow.com/questions/7870498/using-declaration-in-variadic-template/7870614#7870614
+	// it would be nice if we would generalize this to more variables, while retaining vs2013 compatibility
+	template<typename T0, typename T1>
+	class sum final {
+	public:
+		sum(const T0 &value)
+		{
+			_currentType = 0;
+			new (_storage) T0(value);
+		}
 
-	template <typename ReturnType, typename... Ts>
-	struct visitor;
+		sum(const T1 &value)
+		{
+			_currentType = 1;
+			new (_storage) T1(value);
+		}
 
-	template <typename ReturnType, typename Lambda1, typename... Lambdas>
-	struct visitor< ReturnType, Lambda1 , Lambdas...> 
-	  : public visitor<ReturnType, Lambdas...>, public Lambda1 {
+		~sum()
+		{
+			switch (_currentType) {
+				case 0:
+					(*reinterpret_cast<T0 *>(&_storage)).~T0();
+					break;
+				case 1:
+					(*reinterpret_cast<T1 *>(&_storage)).~T1();
+					break;
+			}
+		}
 
-	    using Lambda1::operator();
-	    using visitor< ReturnType , Lambdas...>::operator();
-	    visitor(Lambda1 l1, Lambdas... lambdas) 
-	      : Lambda1(l1), visitor< ReturnType , Lambdas...> (lambdas...)
-	    {}
+		typedef T0 type0;
+		typedef T1 type1;
+
+		template<typename R, typename F0, typename F1>
+		R match(F0 &&f0, F1 &&f1) const
+		{
+			switch (_currentType) {
+				case 0:
+					return f0(*reinterpret_cast<const T0 *>(&_storage));
+				case 1:
+					return f1(*reinterpret_cast<const T1 *>(&_storage));
+			}
+		}
+
+	private:
+		uint8_t _currentType;
+		uint8_t _storage[(sizeof(T0) > sizeof(T1)) ? sizeof(T0) : sizeof(T1)];
 	};
 
-	template <typename ReturnType, typename Lambda1>
-	struct visitor<ReturnType, Lambda1> 
-	  : public boost::static_visitor<ReturnType>, public Lambda1 {
-
-	    using Lambda1::operator();
-	    visitor(Lambda1 l1) 
-	      : boost::static_visitor<ReturnType>(), Lambda1(l1)
-	    {}
-	};
-
-	template <typename ReturnType>
-	struct visitor<ReturnType> 
-	  : public boost::static_visitor<ReturnType> {
-
-	    visitor() : boost::static_visitor<ReturnType>() {}
-	};
-    
-	template <typename R, typename V, typename... Fs>
-	R match(const V &v, Fs... f)
+	template<typename R, typename V, typename F0, typename F1>
+	R match(const V &v, F0 &&f0, F1 &&f1)
 	{
-		return boost::apply_visitor(visitor<R,Fs...>(f...), v);
+		return v.match<R>(f0, f1);
 	}
 }
 
