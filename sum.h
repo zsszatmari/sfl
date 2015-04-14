@@ -55,7 +55,7 @@ namespace sfl
 	template<typename R, typename V, typename F0, typename F1>
 	R match(const V &v, F0 &&f0, F1 &&f1)
 	{
-		return v.match<R>(f0, f1);
+		return v.template match<R>(f0, f1);
 	}
 }
 

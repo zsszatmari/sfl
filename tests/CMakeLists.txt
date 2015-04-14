@@ -12,10 +12,10 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_executable(Tests ${test_src})
 if (WIN32)
-	add_custom_target(RunTests ALL Debug/test
-							   DEPENDS test)
+	add_custom_target(RunTests ALL Debug/Tests
+							   DEPENDS Tests)
 else ()
-	add_custom_target(RunTests ALL ./test
-							   DEPENDS test)
+	add_custom_target(RunTests ALL ./Tests
+							   DEPENDS Tests)
 endif ()
 

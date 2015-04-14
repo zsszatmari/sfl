@@ -50,7 +50,7 @@ namespace sfl
 	  * Maps the f function over the Maybe, resulting in another Maybe which is just f(x) if m wasn't Nothing,
 	  * otherwise Nothing.
 	  */
-	template<typename F, typename MaybeType, typename M = typename MaybeType::type1, typename B = typename std::result_of<F(A)>::type>
+	template<typename F, typename MaybeType, typename A = typename MaybeType::type1, typename B = typename std::result_of<F(A)>::type>
 	Maybe<B> fmap(F &&f, const MaybeType &m)
 	{
 		return match<Maybe<B>>(m, [](const Nothing &)->Maybe<B>{return Nothing();},
