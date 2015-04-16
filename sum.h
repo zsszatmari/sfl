@@ -5,7 +5,18 @@
 
 namespace sfl
 {
-	// it would be nice if we would generalize this to more variables, while retaining vs2013 compatibility
+	/** 
+	 * Algebraic data type, a.k.a. typesafe union. Now it can only have two members but it would be nice 
+	 * if we would generalize this to more variables, while retaining vs2013 compatibility in the future. Use the match()
+	 * function to get variable, this can be thought of a pseudo-guard. match() needs a template parameter which is the
+	 * return value.
+	 *
+	 * usage example:
+	 * sum<int, std::string> value = "this is a string"
+	 *
+	 * auto meaning = match<size_t>(value, [](int a){return 42 + al},
+	 *									   [](const std::string &a){return a.length();});
+	 */
 	template<typename T0, typename T1>
 	class sum final {
 	public:
