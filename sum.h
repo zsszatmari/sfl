@@ -48,8 +48,9 @@ namespace sfl
 		}
 
 	private:
-		uint8_t _currentType;
+		// storage comes first for proper alignment
 		uint8_t _storage[(sizeof(T0) > sizeof(T1)) ? sizeof(T0) : sizeof(T1)];
+		uint8_t _currentType;
 	};
 
 	template<typename R, typename V, typename F0, typename F1>
