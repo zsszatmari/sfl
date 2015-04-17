@@ -69,6 +69,11 @@ namespace sfl
 			    return lhs += diff;
 		    }
 
+		    bool operator<(const const_iterator &rhs)
+		    {
+		    	return _offset < rhs._offset;
+		    }
+
 		private:
 			ImmutableVector<T> _ref;
 			size_t _offset;
