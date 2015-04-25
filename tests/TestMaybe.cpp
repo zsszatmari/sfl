@@ -18,3 +18,17 @@ TEST(Maybe, isNothing)
 	Maybe<int> nada = Nothing();
 	ASSERT_TRUE(isNothing(nada));
 }
+
+TEST(Maybe, Cat)
+{
+	std::vector<Maybe<std::string>> v;
+	v.push_back(Nothing());
+	v.push_back(std::string("something"));
+	v.push_back(Nothing());
+	v.push_back(std::string("other thing"));
+	
+	auto c = catMaybes(v);
+	ASSERT_EQ(c.size(), 2);
+	ASSERT_EQ(c[0], "something");
+	ASSERT_EQ(c[1], "other thing");
+}
