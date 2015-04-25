@@ -21,28 +21,45 @@ namespace sfl
 	template<typename T0, typename T1>
 	class sum final {
 	public:
-		sum(const T0 &value)
+		sum(const T0 &value) :
+			_currentType(0)
 		{
-			_currentType = 0;
 			new (_storage) T0(value);
 		}
 
-		sum(const T1 &value)
+		sum(const T1 &value) :
+			_currentType(1)
 		{
-			_currentType = 1;
 			new (_storage) T1(value);
+		}
+
+	public:
+		sum(const sum<T0,T1> &rhs)
+		{
+			assign(rhs);
+		}
+
+		sum<T0,T1> &operator=(const sum<T0,T1> &rhs)
+		{
+			if (_currentType == rhs._currentType) {
+				switch(_currentType) {
+					case 0:
+						*reinterpret_cast<const T0 *>(&_storage) = *reinterpret_cast<const T0 *>(&rhs._storage);
+						break;
+					case 1:
+						*reinterpret_cast<const T1 *>(&_storage) = *reinterpret_cast<const T1 *>(&rhs._storage);
+						break;
+				}
+			} else {
+				resign();
+				assign(rhs);
+			}
+			return *this;
 		}
 
 		~sum()
 		{
-			switch (_currentType) {
-				case 0:
-					(*reinterpret_cast<T0 *>(&_storage)).~T0();
-					break;
-				case 1:
-					(*reinterpret_cast<T1 *>(&_storage)).~T1();
-					break;
-			}
+			resign();
 		}
 
 		typedef T0 type0;
@@ -61,6 +78,31 @@ namespace sfl
 		}
 
 	private:
+		void assign(const sum<T0,T1> &rhs)
+		{
+			_currentType = rhs._currentType;
+			switch(_currentType) {
+				case 0:
+					new (_storage) T0(*reinterpret_cast<const T0 *>(&rhs._storage));
+					break;
+				case 1:
+					new (_storage) T1(*reinterpret_cast<const T1 *>(&rhs._storage));
+					break;
+			}
+		}
+
+		void resign()
+		{
+			switch (_currentType) {
+				case 0:
+					(*reinterpret_cast<T0 *>(&_storage)).~T0();
+					break;
+				case 1:
+					(*reinterpret_cast<T1 *>(&_storage)).~T1();
+					break;
+			}
+		}
+		
 		// storage comes first for proper alignment
 		uint8_t _storage[(sizeof(T0) > sizeof(T1)) ? sizeof(T0) : sizeof(T1)];
 		uint8_t _currentType;
