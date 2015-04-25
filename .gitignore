@@ -15,4 +15,4 @@ tests/Tests.dir
 *.sdf
 tests/sfltest.sln
 *.suo
-Tests
+tests/Tests
