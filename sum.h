@@ -1,6 +1,7 @@
 #ifndef SFL_SUM_H
 #define SFL_SUM_H
 
+#include <cassert>
 #include <cstdint>
 
 namespace sfl
@@ -56,6 +57,7 @@ namespace sfl
 				case 1:
 					return f1(*reinterpret_cast<const T1 *>(&_storage));
 			}
+			assert(false);
 		}
 
 	private:
