@@ -22,6 +22,17 @@ namespace sfl
     namespace Map
     {
         /*
+         * O(1) A map with a single element
+         */
+        template<typename K,typename V>
+        std::map<K,V> singleton(const K &k, const V &v)
+        {
+            std::map<K,V> ret;
+            ret.insert(std::make_pair(k,v));
+            return ret;
+        }
+
+        /*
          * O(n*log n). Build a map from a list of key/value pairs. If the list contains more than one value for the range
          * same key, the last value for the key is retained.
          */
@@ -78,6 +89,29 @@ namespace sfl
             return fromRangeWith(operator+<std::vector<B>>, map([](const std::pair<A,B> &p){
                 return std::make_pair(p.first,std::vector<B>{{p.second}});
             },r));
+        }
+
+        /*
+         * O(n+m)?. The expression (union t1 t2) takes the left-biased union of t1 and t2. It prefers t1 
+         * when duplicate keys are encountered, i.e.
+         */
+        template<typename M>
+        M mapUnion(const M &lhs,const M &rhs)
+        {
+            auto ret = lhs;
+            for (const auto &p : rhs) {
+                ret.insert(p);
+            }
+            return ret;
+        }
+
+        /*
+         * The union of a range of maps
+         */
+        template<typename R,typename M = typename R::value_type>
+        M unionsR(const R &r)
+        {
+            return foldlR(mapUnion<M>, M(),r);
         }
     }
 }
