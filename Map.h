@@ -113,6 +113,13 @@ namespace sfl
         {
             return foldlR(mapUnion<M>, M(),r);
         }
+
+        template<typename M,typename A = typename M::key_type,typename B = typename M::mapped_type>
+        B findWithDefault(const B &def, const A &key, const M &m)
+        {
+            auto it = m.find(key);
+            return it == m.end() ? def : it->second;
+        } 
     }
 }
 
