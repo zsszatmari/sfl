@@ -92,7 +92,7 @@ namespace sfl
         }
 
         /*
-         * O(n+m)?. The expression (union t1 t2) takes the left-biased union of t1 and t2. It prefers t1 
+         * O(n*m). The expression (union t1 t2) takes the left-biased union of t1 and t2. It prefers t1 
          * when duplicate keys are encountered, i.e.
          */
         template<typename M>
