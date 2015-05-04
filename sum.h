@@ -44,10 +44,10 @@ namespace sfl
 			if (_currentType == rhs._currentType) {
 				switch(_currentType) {
 					case 0:
-						*reinterpret_cast<const T0 *>(&_storage) = *reinterpret_cast<const T0 *>(&rhs._storage);
+						*reinterpret_cast<T0 *>(&_storage) = *reinterpret_cast<const T0 *>(&rhs._storage);
 						break;
 					case 1:
-						*reinterpret_cast<const T1 *>(&_storage) = *reinterpret_cast<const T1 *>(&rhs._storage);
+						*reinterpret_cast<T1 *>(&_storage) = *reinterpret_cast<const T1 *>(&rhs._storage);
 						break;
 				}
 			} else {
