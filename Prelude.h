@@ -125,6 +125,22 @@ namespace sfl
         return ret;
     }
 
+    /**
+      * O(n^2). The nub function removes duplicate elements from a list. In particular, it keeps only the first 
+      * occurrence of each element. (The name nub means `essence'.) Original order is preserved.
+      */
+    template<typename R>
+    R nub(const R &range)
+    {
+        R ret;
+        for (auto &element : range) {
+            if (find(ret.begin(),ret.end(),element) == ret.end()) {
+                ret.push_back(element);
+            }
+        }
+        return ret;
+    }
+
     /*
      * O(n*log(n)). The ordNub function removes duplicate elements from a list. (The name nub means `essence'.)
      * It guarantees to be sorted, that means not retaining the original order.
