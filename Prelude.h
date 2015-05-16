@@ -267,6 +267,20 @@ namespace sfl
     }
 
     /**
+     * fold, applied to a binary operator, a starting value (typically the left-identity of the
+     * operator), and a list, reduces the list using the binary operator, from left to right.
+     */
+    template<typename F,typename R,typename A = typename R::value_type,typename B = typename std::result_of<F(A &&)>::type>
+    B foldl(F &&f, const B &initial, const R &range)
+    {
+        auto value = initial;
+        for (auto &item : range) {
+            value = f(value, item);;
+        }
+        return value;
+    }
+
+    /**
      * foldl, applied to a binary operator, a starting value (typically the left-identity of the
      * operator), and a list, reduces the list using the binary operator, from left to right.
      * This is a recursive function.
