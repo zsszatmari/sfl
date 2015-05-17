@@ -366,6 +366,19 @@ namespace sfl
         return ret;
     }
 
+    /*
+     * reverse xs returns the elements of xs in reverse order.
+     */
+    template<typename R>
+    R reverse(const R &r)
+    {
+        R ret;
+        for (auto it = r.rbegin() ; it != r.rend() ; ++it) {
+            ret.push_back(*it);
+        }
+        return ret;
+    }
+
     /* 
      * zip takes two lists and returns a list of corresponding pairs. If one input list is short, 
      * excess elements of the longer list are discarded.

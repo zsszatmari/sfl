@@ -40,3 +40,16 @@ TEST(Split, chunkRImmutable)
 	ASSERT_EQ(splitted.at(1).at(1), "d");
 	ASSERT_EQ(splitted.at(2).at(0), "e");
 }
+
+TEST(Split, On)
+{
+	using std::vector;
+	using std::string;
+
+	ASSERT_EQ(vector<string>({"a","b",".c","","d",""}), splitOn(string(".."), string("a..b...c....d..")));
+	ASSERT_EQ(vector<string>({"https:","","i.ytimg.com","vi","uJ_1HMAGb4k","hqdefault.jpg"}), splitOn(string("/"),string("https://i.ytimg.com/vi/uJ_1HMAGb4k/hqdefault.jpg")));
+	// this differs from Haskell Split.splitOn behaviour. the point is that there is no crash
+	ASSERT_EQ(vector<string>({"abc"}), splitOn(string(""),string("abc")));
+	ASSERT_EQ(vector<string>({""}), splitOn(string(","),string("")));
+	ASSERT_EQ(vector<string>({"",""}), splitOn(string(","),string(",")));
+}
