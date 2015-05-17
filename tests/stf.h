@@ -14,6 +14,7 @@
 #include <sstream>
 #include <string>
 #include <functional>
+#include "sfl/Prelude.h"
 
 extern std::vector<std::pair<std::string,std::function<void()>>> tests;
 #define INIT_SFL \
@@ -46,6 +47,13 @@ extern std::vector<std::pair<std::string,std::function<void()>>> tests;
 			throw std::logic_error(ss.str());\
 		}\
 	}
+
+inline std::ostream & operator<< (std::ostream &out, const std::vector<std::string> &strings)
+{
+	using std::string;
+	out << "[" << sfl::intercalate(string(","), sfl::map([](const string &s){return string("\"") + s + "\"";},strings)) << "]";
+ 	return out;
+}
 
 inline int runTests()
 {

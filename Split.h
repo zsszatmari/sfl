@@ -1,6 +1,7 @@
 #ifndef SFL_SPLIT_H
 #define SFL_SPLIT_H
 
+#include <cassert>
 #include "sfl/Prelude.h"
 #include "sfl/ImmutableList.h"
 
@@ -20,6 +21,43 @@ namespace sfl
 		return length(r) <= n 
 					? List::singleton(r)
 					: cons(take(n,r), chunkR(n, drop(n,r)));  
+	}
+
+	/**
+	  * Split on the given sublist. Equivalent to split . dropDelims . onSublist. For example:
+	  * splitOn(string(".."),string("a..b...c....d..")) == ["a","b",".c","","d",""]
+	  */
+	template<typename R>
+	std::vector<R> splitOn(const R &on, const R &r)
+	{
+		if (on.empty()) {
+			return std::vector<R>({r});
+		}
+
+		std::vector<R> ret;
+		auto itLastEnd = r.begin();
+		for (auto it = r.begin() ; (it + on.size()) <= r.end();) {
+			bool last = (it + on.size()) == r.end();
+			if (R(it, it+on.size()) == on) {
+				ret.push_back(R(itLastEnd, it));
+				if (last && on.empty()) {
+					break;
+				}
+				it += on.size();
+				itLastEnd = it;
+				if (last) {
+					break;
+				}
+			} else {
+				if (last) {
+					break;
+				}
+				++it;
+			}
+		}
+		assert(itLastEnd <= r.end());
+		ret.push_back(R(itLastEnd, r.end()));
+		return ret;
 	}
 }
 
