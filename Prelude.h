@@ -344,6 +344,15 @@ namespace sfl
     }
 
     /*
+     * replicate(n,x) is a list of length n with x the value of every element. 
+    */
+    template<typename T>
+    std::vector<T> replicate(size_t n, const T &x)
+    {
+        return std::vector<T>(n,x); 
+    }
+
+    /*
      * Generates an arithmetic sequence, with max possibly included. 
      */ 
     inline std::vector<long> sequence(long min, long inc, long max)
