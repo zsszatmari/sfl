@@ -352,7 +352,7 @@ namespace sfl
         return std::vector<T>(n,x); 
     }
 
-    /*
+    /**
      * Generates an arithmetic sequence, with max possibly included. 
      */ 
     inline std::vector<long> sequence(long min, long inc, long max)
@@ -364,6 +364,36 @@ namespace sfl
             value += inc;
         }
         return ret;
+    }
+
+    /**
+      * Generates an arithmetic sequence of n steps
+      */
+
+    inline std::vector<float> sequenceSteps(float min, float increment, size_t steps)
+    {
+        std::vector<float> ret;
+        float value = min;
+        for (int i = 0 ; i < steps ; ++i) {
+            ret.push_back(value);
+            value += increment;
+        }
+        return ret;
+    }
+
+    /**
+     * Generates an arithmetic sequence of floats, if points >= 2, a value very close to max included, 
+     * altough it won't be exactly the same number
+     */
+    inline std::vector<float> sequencePoints(float min, float max, size_t points)
+    {
+        if (points == 0) {
+            return std::vector<float>();
+        }
+        if (points == 1) {
+            return std::vector<float>(1, min);
+        }
+        return sequenceSteps(min, (max-min) / (points - 1), points);
     }
 
     /*
