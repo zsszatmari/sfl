@@ -355,10 +355,12 @@ namespace sfl
     /**
      * Generates an arithmetic sequence, with max possibly included. 
      */ 
-    inline std::vector<long> sequence(long min, long inc, long max)
+    template<typename T>
+    inline std::vector<T> sequence(T min, T inc, T max)
     {
-        std::vector<long> ret;
-        long value = min;
+        static_assert(std::is_integral<T>::value, "must sequence integer values");
+        std::vector<T> ret;
+        T value = min;
         while (value <= max) {
             ret.push_back(value);
             value += inc;
