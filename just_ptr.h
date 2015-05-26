@@ -28,24 +28,31 @@ namespace sfl
 			++(*_refCount);
 		}
 
+		just_ptr(const just_ptr &rhs) :
+			_refCount(rhs._refCount),
+			_ptr(rhs._ptr)
+		{
+			++(*_refCount);
+		}
+
 		template<typename Y>
 		just_ptr &operator=(const just_ptr<Y> &rhs) 
 		{
-			if (_ptr == rhs._ptr) {
-				return;
-			}
-			if (--(*_refCount) == 0) {
-				delete _refCount;
-				delete _ptr;
-			}
-			_refCount = rhs._refCount;
-			_ptr = rhs._ptr;
-			++(*_refCount);
+			copyassign(rhs);
+			
+			return *this;
+		}
+
+		just_ptr &operator=(const just_ptr &rhs) 
+		{
+			copyassign(rhs);
+			
+			return *this;
 		}
 
 		~just_ptr()
 		{
-			if (--(*_refCount) == 0) {
+			if (_refCount->fetch_sub(1) == 1) {
 				delete _refCount;
 				delete _ptr;
 			}
@@ -74,6 +81,21 @@ namespace sfl
 		}
 
 	private:
+		template<typename Y>
+		void copyassign(const just_ptr<Y> &rhs)
+		{
+			if (_ptr == rhs._ptr) {
+				return;
+			}
+			if (_refCount->fetch_sub(1) == 1) {
+				delete _refCount;
+				delete _ptr;
+			}
+			_refCount = rhs._refCount;
+			_ptr = rhs._ptr;
+			_refCount->fetch_add(1);
+		}
+
 		std::atomic_int *_refCount;
 		T *_ptr;
 
@@ -85,6 +107,105 @@ namespace sfl
 	just_ptr<T> make_just(Args... args)
 	{
 		return just_ptr<T>(Unsafe(), new T(args...));
+	}
+
+	/**
+	  * A smart pointer, similar to shared_ptr, but it is always guaranteed that the value behind it is valid. On the 
+	  * other hand, the value stored is mutable, and you must ensure that it is not accessed from multiple threads.
+	  * Typical use case is to pass around large data.
+	  */
+	template<typename T>
+	class mutable_just_ptr final
+	{
+	public:
+		mutable_just_ptr() = delete;
+
+		template<typename Y>
+		mutable_just_ptr(const mutable_just_ptr<Y> &rhs) :
+			_refCount(rhs._refCount),
+			_ptr(rhs._ptr)
+		{
+			_refCount->fetch_add(1);
+		}
+
+		mutable_just_ptr(const mutable_just_ptr &rhs) :
+			_refCount(rhs._refCount),
+			_ptr(rhs._ptr)
+		{
+			_refCount->fetch_add(1);
+		}
+
+		template<typename Y>
+		mutable_just_ptr &operator=(const mutable_just_ptr<Y> &rhs) 
+		{
+            copyassign(rhs);
+			return *this;
+		}
+
+		mutable_just_ptr &operator=(const mutable_just_ptr &rhs)
+		{
+			copyassign(rhs);
+			return *this;
+		} 
+
+		~mutable_just_ptr()
+		{
+			if (_refCount->fetch_sub(1) == 1) {
+				delete _refCount;
+				delete _ptr;
+			}
+		}
+
+		T &operator*() const
+		{
+			return *_ptr;
+		}
+
+	    T *operator->() const
+	    {
+	    	return _ptr;
+	    }
+
+	    T *get() const
+	    {
+	    	return _ptr;
+	    }
+
+		mutable_just_ptr(const Unsafe &, T *ptr) :
+			_ptr(ptr),
+			_refCount(new std::atomic_int())
+		{
+			*_refCount = 1;
+		}
+
+	private:
+		template<typename Y>
+		void copyassign(const mutable_just_ptr<Y> &rhs) 
+		{
+			if (_ptr == rhs._ptr) {
+				return;
+			}
+			assert(_refCount != rhs._refCount);
+			if (_refCount->fetch_sub(1) == 1) {
+				delete _refCount;
+				delete _ptr;
+			}
+			_refCount = rhs._refCount;
+			_ptr = rhs._ptr;
+			_refCount->fetch_add(1);
+		}
+
+		std::atomic_int *_refCount;
+		T *_ptr;
+
+		template<typename Y>
+		friend class mutable_just_ptr;
+	};
+
+	template<typename T,typename... Args>
+	mutable_just_ptr<T> make_mutable_just(Args... args)
+	{
+		return mutable_just_ptr<T>(Unsafe(), new T(args...));
 	}
 }
 
