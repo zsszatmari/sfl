@@ -475,6 +475,18 @@ namespace sfl
         }
         return false;
     }
+
+    /** 
+      * minus computes the multiset difference of two ordered lists. Each occurence of an element in the second
+      * argument is removed from the first list, if it is there.
+      */
+    template<typename R>
+    R minus(const R &lhs, const R &rhs)
+    {
+        R ret;
+        set_difference(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), back_inserter(ret));
+        return std::move(ret);
+    }
 }
 
 #endif
