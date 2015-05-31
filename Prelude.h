@@ -487,6 +487,17 @@ namespace sfl
         set_difference(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), back_inserter(ret));
         return std::move(ret);
     }
+
+    /**
+     * isect computes the intersection of two ordered lists. The result contains those elements contained in both arguments
+     */
+    template<typename R>
+    R isect(const R &lhs, const R &rhs)
+    {
+        R ret;
+        set_intersection(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), back_inserter(ret));
+        return std::move(ret);
+    }
 }
 
 #endif
