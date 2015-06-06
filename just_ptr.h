@@ -10,6 +10,9 @@ namespace sfl
     {
     };
 
+    template<class T>
+    class mutable_just_ptr;
+
 
 	/**
 	  * A smart pointer, similar to shared_ptr, but it is always guaranteed that the value behind it is valid.
@@ -78,6 +81,13 @@ namespace sfl
 			_refCount(new std::atomic_int())
 		{
 			*_refCount = 1;
+		}
+
+		just_ptr(const Unsafe &, const mutable_just_ptr<T> &rhs) :
+			_refCount(rhs._refCount),
+			_ptr(rhs._ptr)
+		{
+			++(*_refCount);
 		}
 
 	private:
@@ -200,6 +210,7 @@ namespace sfl
 
 		template<typename Y>
 		friend class mutable_just_ptr;
+		friend class just_ptr<T>;
 	};
 
 	template<typename T,typename... Args>
