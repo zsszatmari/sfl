@@ -1,6 +1,7 @@
 #ifndef SFL_SPLIT_H
 #define SFL_SPLIT_H
 
+#include <vector>
 #include <cassert>
 #include "sfl/Prelude.h"
 #include "sfl/ImmutableList.h"
@@ -8,12 +9,32 @@
 namespace sfl
 {
 	/**
+	  * chunk(n,range) splits a range into length/n pieces. The last piece will be shorter if n does 
+	  * not evenly divide the length of the list.
+	  */
+	template<typename R>
+	std::vector<R> chunk(size_t n, const R &r)
+	{
+		std::vector<R> ret;
+		ret.reserve((r.size() + n -1) / n);
+		int pos = 0;
+		while ((r.size() - pos) >= n) {
+			ret.push_back(R(r.begin() + pos, r.begin() + pos + n));
+			pos += n;
+		}
+		if ((r.size() - pos) > 0) {
+			ret.push_back(R(r.begin() + pos, r.end()));
+		}
+		return std::move(ret);
+	}
+
+	/**
 	  * chunk(n,range) splits a range into length-n pieces. The last piece will be shorter if n does 
 	  * not evenly divide the length of the list.
 	  * Note that if R is an std::vector, this takes O(n^2) copies, while if an ImmutableVector
 	  * is supplied, there is no copy at all, while calling toImmutableVector takes O(n)
 	  *
-	  * This is a recursive operation, if stack overflow is a concern, avoid it.
+	  * This is a recursive version. If stack overflow is a concern, avoid it.
 	  */ 
 	template<typename R>
 	ImmutableList<R> chunkR(size_t n, const R &r)
