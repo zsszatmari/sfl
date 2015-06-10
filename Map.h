@@ -86,7 +86,7 @@ namespace sfl
         template<typename R,typename A = typename R::value_type::first_type,typename B = typename R::value_type::second_type,typename M = typename std::map<A,typename std::vector<B>>>
         M sortAndGroup(const R &r)
         {
-            return fromRangeWith(operator+<std::vector<B>>, map([](const std::pair<A,B> &p){
+            return fromRangeWith(plus<std::vector<B>>, map([](const std::pair<A,B> &p){
                 return std::make_pair(p.first,std::vector<B>{{p.second}});
             },r));
         }

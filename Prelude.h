@@ -46,13 +46,22 @@ namespace sfl
       * i.e., {x1, ..., xm} + {y1, ..., yn} == {x1, ..., xm, y1, ..., yn] 
       */
     template<typename R>
-    R operator+(const R &lhs, const R &rhs)
+    R plus(const R &lhs, const R &rhs)
     {
         R ret;
         ret.reserve(std::distance(lhs.begin(),lhs.end()) + std::distance(rhs.begin(),rhs.end()));
         std::copy(lhs.begin(),lhs.end(),back_inserter(ret));
         std::copy(rhs.begin(),rhs.end(),back_inserter(ret));
         return std::move(ret);
+    }
+
+    namespace addition
+    {
+        template<typename R>
+        R operator+(const R &lhs, const R &rhs)
+        {
+            return plus(lhs,rhs);
+        }
     }
 
     /** 
