@@ -135,11 +135,11 @@ namespace sfl
 		std::mutex *_mutex;
 	};
 
-	STM::STM()
+	inline STM::STM()
 	{
 	}
 
-	void STM::atomically(const function<void(STM &)> &block)
+	inline void STM::atomically(const function<void(STM &)> &block)
 	{
 		struct Finally final {
 			Finally(const function<void()> &f) : _f(f)
@@ -192,7 +192,7 @@ namespace sfl
 		}
 	}
 
-	void STM::acquireLock(std::mutex &m)
+	inline void STM::acquireLock(std::mutex &m)
 	{
 		if (!elem(&m, _lockedMutexes)) {
 			if (m.try_lock()) {
@@ -203,18 +203,18 @@ namespace sfl
 		}
 	}
 
-	void STM::addCommit(const function<void()> &commit, const function<void()> &rollback)
+	inline void STM::addCommit(const function<void()> &commit, const function<void()> &rollback)
 	{
 		_commitBlocks.push_back(commit);		
 		_rollbackBlocks.push_back(rollback);
 	}
 
-	void STM::retry()
+	inline void STM::retry()
 	{
 		throw retry_transaction(nullptr);
 	}
 
-	STM::~STM()
+	inline STM::~STM()
 	{
 		for (std::mutex *m : _lockedMutexes) {
 			m->unlock();
