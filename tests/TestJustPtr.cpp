@@ -36,3 +36,22 @@ TEST(just_ptr, Hierarchy)
 		ASSERT_EQ(3, p->a);
 	}
 }
+
+TEST(just_ptr, Delete)
+{
+	static bool deleted = false;
+
+	struct JustMock
+	{
+		~JustMock()
+		{
+			deleted = true;
+		}
+	};
+
+	JustMock *m = new JustMock();
+	{
+		just_ptr<JustMock> ptr(sfl::Unsafe(), m);
+	}
+	ASSERT_TRUE(deleted);
+}
