@@ -134,6 +134,17 @@ namespace sfl
         return ret;
     }
 
+    /*
+     * The sort function implements a sorting algorithm. It is not guaranteed to be stable. 
+     */
+    template<typename F,typename R>
+    R sortBy(F &&lessthan, const R &range)
+    {
+        R ret(range.begin(),range.end());
+        std::sort(ret.begin(), ret.end(),lessthan);
+        return ret;
+    }
+
     /**
       * O(n^2). The nub function removes duplicate elements from a list. In particular, it keeps only the first 
       * occurrence of each element. (The name nub means `essence'.) Original order is preserved.
@@ -350,6 +361,44 @@ namespace sfl
     std::vector<R> groupR(const R &range)
     {
         return groupByR([](const T &lhs, const T &rhs){return lhs == rhs;}, range);
+    }
+
+    /**
+    * The group function takes a range and returns a vector of ranges such that the concatenation of the 
+    * result is equal to the argument. Moreover, each sublist in the result contains only equal (by f) elements. 
+    */
+    template<typename F,typename R>
+    std::vector<R> groupBy(F &&eq, const R &range)
+    {
+        R current;
+        std::vector<R> ret;
+        for (auto &elem : range) {
+            if (current.empty()) {
+                current.push_back(elem);
+            } else {
+                if (eq(head(current), elem)) {
+                    current.push_back(elem);
+                } else {
+                    ret.push_back(current);
+                    R newCurrent;
+                    newCurrent.push_back(elem);
+                    current = newCurrent;
+                }
+            }
+        }
+        if (!current.empty()) {
+            ret.push_back(current);
+        }
+        return ret;
+    }
+
+    /**
+      * group by the the default comparison operator
+      */
+    template<typename R,typename T = typename R::value_type>
+    std::vector<R> group(const R &range)
+    {
+        return groupBy([](const T &lhs, const T &rhs){return lhs == rhs;}, range);
     }
 
     /*
