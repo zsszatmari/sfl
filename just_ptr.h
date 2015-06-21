@@ -2,6 +2,7 @@
 #define JUST_PTR_H
 
 #include <atomic>
+#include "sfl/Maybe.h"
 
 namespace sfl
 {
@@ -119,6 +120,9 @@ namespace sfl
 		return just_ptr<T>(Unsafe(), new T(args...));
 	}
 
+	template<class T>
+	class mutable_weak_just_ptr;
+
 	/**
 	  * A smart pointer, similar to shared_ptr, but it is always guaranteed that the value behind it is valid. On the 
 	  * other hand, the value stored is mutable, and you must ensure that it is not accessed from multiple threads.
@@ -133,6 +137,7 @@ namespace sfl
 		template<typename Y>
 		mutable_just_ptr(const mutable_just_ptr<Y> &rhs) :
 			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
 			_ptr(rhs._ptr)
 		{
 			_refCount->fetch_add(1);
@@ -140,6 +145,7 @@ namespace sfl
 
 		mutable_just_ptr(const mutable_just_ptr &rhs) :
 			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
 			_ptr(rhs._ptr)
 		{
 			_refCount->fetch_add(1);
@@ -160,10 +166,7 @@ namespace sfl
 
 		~mutable_just_ptr()
 		{
-			if (_refCount->fetch_sub(1) == 1) {
-				delete _refCount;
-				delete _ptr;
-			}
+			dispose();
 		}
 
 		T &operator*() const
@@ -183,9 +186,19 @@ namespace sfl
 
 		mutable_just_ptr(const Unsafe &, T *ptr) :
 			_ptr(ptr),
-			_refCount(new std::atomic_int())
+			_refCount(new std::atomic_int()),
+            _weakRefCount(new std::atomic_int())
 		{
 			*_refCount = 1;
+			*_weakRefCount = 0;
+		}
+
+		mutable_just_ptr(const Unsafe &, const mutable_weak_just_ptr<T> &rhs) :
+			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
+			_ptr(rhs._ptr)
+		{
+			_refCount->fetch_add(1);
 		}
 
 	private:
@@ -196,21 +209,33 @@ namespace sfl
 				return;
 			}
 			assert(_refCount != rhs._refCount);
-			if (_refCount->fetch_sub(1) == 1) {
-				delete _refCount;
-				delete _ptr;
-			}
+			dispose();
+
 			_refCount = rhs._refCount;
+			_weakRefCount = rhs._weakRefCount;
 			_ptr = rhs._ptr;
 			_refCount->fetch_add(1);
 		}
 
+		void dispose()
+		{
+			if (_refCount->fetch_sub(1) == 1) {
+				delete _ptr;
+				if (_weakRefCount == 0) {
+					delete _refCount;
+					delete _weakRefCount;
+				}
+			}
+		}
+
 		std::atomic_int *_refCount;
+		std::atomic_int *_weakRefCount;
 		T *_ptr;
 
 		template<typename Y>
 		friend class mutable_just_ptr;
 		friend class just_ptr<T>;
+		friend class mutable_weak_just_ptr<T>;
 	};
 
 	template<typename T,typename... Args>
@@ -218,6 +243,97 @@ namespace sfl
 	{
 		return mutable_just_ptr<T>(Unsafe(), new T(args...));
 	}
+
+	template<typename T>
+	class mutable_weak_just_ptr final
+	{
+	public:
+		mutable_weak_just_ptr() = delete;
+
+		mutable_weak_just_ptr(const mutable_just_ptr<T> &rhs) :
+			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
+			_ptr(rhs._ptr)
+		{
+			_weakRefCount->fetch_add(1);
+		}
+
+		template<typename Y>
+		mutable_weak_just_ptr(const mutable_weak_just_ptr<Y> &rhs) :
+			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
+			_ptr(rhs._ptr)
+		{
+			_weakRefCount->fetch_add(1);
+		}
+
+		mutable_weak_just_ptr(const mutable_weak_just_ptr &rhs) :
+			_refCount(rhs._refCount),
+			_weakRefCount(rhs._weakRefCount),
+			_ptr(rhs._ptr)
+		{
+			_weakRefCount->fetch_add(1);
+		}
+
+		~mutable_weak_just_ptr()
+		{
+			dispose();
+		}
+
+		template<typename Y>
+		mutable_weak_just_ptr &operator=(const mutable_weak_just_ptr<Y> &rhs) 
+		{
+			copyassign(rhs);
+			return *this;
+		}
+
+		mutable_weak_just_ptr &operator=(const mutable_weak_just_ptr &rhs)
+		{
+			copyassign(rhs);
+			return *this;
+		} 
+
+		Maybe<mutable_just_ptr<T>> lock() const
+		{
+			if (*_refCount > 0) {
+				return mutable_just_ptr<T>(Unsafe(), *this);
+			} else {
+				return Nothing();
+			} 
+		}
+
+	private:
+		template<typename Y>
+		void copyassign(const mutable_weak_just_ptr<Y> &rhs) 
+		{
+			if (_ptr == rhs._ptr) {
+				return;
+			}
+			assert(_refCount != rhs._refCount);
+			dispose();
+
+			_refCount = rhs._refCount;
+			_weakRefCount = rhs._weakRefCount;
+			_ptr = rhs._ptr;
+			_weakRefCount->fetch_add(1);
+		}
+
+		void dispose()
+		{
+			if (_weakRefCount->fetch_sub(1) == 1) {
+				if (_refCount == 0) {
+					delete _refCount;
+					delete _weakRefCount;
+				}
+			}
+		}
+
+		friend class mutable_just_ptr<T>;
+
+		std::atomic_int *_refCount;
+		std::atomic_int *_weakRefCount;
+		T *_ptr;
+	};
 }
 
 #endif
