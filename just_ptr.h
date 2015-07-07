@@ -164,6 +164,11 @@ namespace sfl
 			return *this;
 		} 
 
+		bool operator==(const mutable_just_ptr &rhs) const
+		{
+			return _ptr == rhs._ptr;
+		}
+
 		~mutable_just_ptr()
 		{
 			dispose();
