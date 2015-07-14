@@ -152,6 +152,10 @@ namespace sfl
 			}
 
 			function<void()> _f;
+
+		private:
+			Finally(const Finally &) = delete;
+			Finally &operator=(const Finally &) = delete;
 		};
 		auto curr = CurrentTransaction::get();
 		if (curr) {
