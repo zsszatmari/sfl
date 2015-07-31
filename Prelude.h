@@ -13,6 +13,14 @@ namespace sfl
 {
     /**
      * map(f, xs) is the list obtained by applying f to each element of xs
+
+       Example:
+
+       @code 
+
+       auto incrementedValues = map([](int value){return value + 1;}, vector<int>({3,4,5,6}));
+       
+       @endcode
      */
     template<typename F,typename R,typename A = typename R::value_type,typename B = typename std::result_of<F(A &&)>::type>
     std::vector<B> map(F &&f, const R &range)
