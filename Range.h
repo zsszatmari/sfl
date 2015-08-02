@@ -1,6 +1,7 @@
 #ifndef SFL_RANGE_H
 #define SFL_RANGE_H
 
+#include <algorithm>
 #include "sfl/Maybe.h"
 
 /** Note the terminology 'range' refers to a genericcontainer. Requirements vary,
@@ -16,7 +17,7 @@ namespace sfl
     template<typename A, typename R>
     bool elem(const A &elem, const R &range)
     {
-        auto it = find(range.begin(),range.end(),elem);
+        auto it = std::find(range.begin(),range.end(),elem);
         if (it == range.end()) {
             return false;
         }
@@ -30,7 +31,7 @@ namespace sfl
     template<typename A,typename R>
     Maybe<size_t> elemIndex(const A &elem, const R &range)
     {
-    	  auto it = find(range.begin(),range.end(),elem);
+    	  auto it = std::find(range.begin(),range.end(),elem);
     	  if (it == range.end()) {
     	    	return Nothing();
     	  }
@@ -43,7 +44,7 @@ namespace sfl
     template<typename R,typename T>
     R sortedMinusOne(const R &range, const T &element)
     {
-        auto it = lower_bound(range.begin(),range.end(),element);
+        auto it = std::lower_bound(range.begin(),range.end(),element);
         if (it != range.end() && *it == element) {
             auto cr = range;
             cr.erase(cr.begin() + std::distance(range.begin(),it));
