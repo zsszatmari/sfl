@@ -42,7 +42,11 @@ namespace sfl
 			static STM *get()
 			{
 				lock_guard<mutex> l(currentTransactionMutex());
-				return Map::findWithDefault((STM *)nullptr, std::this_thread::get_id(), currentTransaction());
+				// we don't ever want a copy here because of compiler problems:
+				//return Map::findWithDefault((STM *)nullptr, std::this_thread::get_id(), currentTransaction());
+				const auto &m = currentTransaction();
+				auto it = m.find(std::this_thread::get_id());
+				return (it == m.end()) ? ((STM *)nullptr) : it->second;   
 			}
 
 		private:
