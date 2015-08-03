@@ -253,7 +253,12 @@ namespace sfl
 	class mutable_weak_just_ptr final
 	{
 	public:
-		mutable_weak_just_ptr() = delete;
+		mutable_weak_just_ptr() :
+			_refCount(nullptr),
+			_weakRefCount(nullptr),
+			_ptr(nullptr)			
+		{
+		}
 
 		mutable_weak_just_ptr(const mutable_just_ptr<T> &rhs) :
 			_refCount(rhs._refCount),
@@ -300,6 +305,9 @@ namespace sfl
 
 		Maybe<mutable_just_ptr<T>> lock() const
 		{
+			if (!_refCount) {
+				return Nothing();
+			}
 			if (*_refCount > 0) {
 				return mutable_just_ptr<T>(Unsafe(), *this);
 			} else {
@@ -314,8 +322,10 @@ namespace sfl
 			if (_ptr == rhs._ptr) {
 				return;
 			}
-			assert(_refCount != rhs._refCount);
-			dispose();
+			if (_refCount) {
+				assert(_refCount != rhs._refCount);
+				dispose();
+			}
 
 			_refCount = rhs._refCount;
 			_weakRefCount = rhs._weakRefCount;
@@ -325,7 +335,7 @@ namespace sfl
 
 		void dispose()
 		{
-			if (_weakRefCount->fetch_sub(1) == 1) {
+			if (_weakRefCount && _weakRefCount->fetch_sub(1) == 1) {
 				if (_refCount == 0) {
 					delete _refCount;
 					delete _weakRefCount;
