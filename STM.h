@@ -52,14 +52,14 @@ namespace sfl
 		private:
 			static mutex &currentTransactionMutex()
 			{
-				static mutex m;
-				return m;
+				static mutex *m = new mutex();
+				return *m;
 			}
 
 			static std::map<thread::id,STM *> &currentTransaction()
 			{
-				static std::map<thread::id,STM *> t;
-				return t;
+				static std::map<thread::id,STM *> *t = new std::map<thread::id,STM *>();
+				return *t;
 			}
 		};
 
