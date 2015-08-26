@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <thread>
+#include <mutex>
 #include "sfl/Range.h"
 #include "sfl/Maybe.h"
 #include "sfl/Map.h"
